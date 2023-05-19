@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
+
+import { accountService } from '@/_services/account.service';
 
 import './auth.css'
 
 const Login = () => {
 
+    let navigate = useNavigate()
     // const [login, setLogin] = useState('')
     // const [password, setPassword] = useState('')
 
     const [credentials, setCredentials]=useState({
-        login: '',
-        password:''
+        email: 'randria@gmail.com',
+        password:'123456'
     })
 
     const onChange=(e) =>{
@@ -21,14 +25,20 @@ const Login = () => {
 
     const onSubmit=(e) =>{
         e.preventDefault()
-        console.log(credentials)
+        accountService.login(credentials)
+        .then(res=>{
+            accountService.saveToken(res.data.access_token)
+            navigate('/admin') 
+        })
+        .catch(error => console.log(error))
+        
     }
 
     return (
         <form onSubmit={onSubmit}>
             <div className="group">
                 <label htmlFor="login">Identifiant</label>
-                <input type="text" name="login" value={credentials.login} onChange={onChange}></input>
+                <input type="text" name="email" value={credentials.email} onChange={onChange}></input>
             </div>
             <div className="group">
                 <label htmlFor="password">Mot de passe</label>
