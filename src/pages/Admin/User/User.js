@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { userService } from '@/_services/user.service';
+import { Link } from 'react-router-dom';
+import { userService } from '@/_services';
 
 const User = () => {
-    let navigate = useNavigate()
+    //let navigate = useNavigate()
 
     const [users,setUsers] = useState([])
     const flag = useRef(false)
@@ -14,7 +14,6 @@ const User = () => {
 
             userService.getAllUsers()
             .then(res => {
-                console.log(res.data.user)
                 setUsers(res.data.user)
             })
             .catch(err => console.log(err))
@@ -45,8 +44,8 @@ const User = () => {
             <tbody>
                 {
                     users.map(user => (
-                        <tr>
-                            <td>{user.id}</td>
+                        <tr key={user.id}>
+                            <td><Link to={`/admin/user/edit/${user.id}`}>{user.id}</Link></td>
                             <td>{user.nom}</td>
                             <td>{user.email}</td>
                         </tr>

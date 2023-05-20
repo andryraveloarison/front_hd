@@ -20,6 +20,8 @@ let isLogged = () => {
 let getTocken = () => {
     return localStorage.getItem('token')
 }
+
+
 export const accountService = {
     login, saveToken, logout, isLogged,getTocken
 }
