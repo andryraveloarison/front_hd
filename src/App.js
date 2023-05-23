@@ -4,7 +4,11 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import PublicRouter from '@/pages/Public/PublicRouter';
 import AdminRouter from '@/pages/Admin/AdminRouter';
 import AuthRouter from '@/pages/Auth/AuthRouter';
-import AuthGuard from './_helpers/AuthGuard';
+import UserGuard from './_helpers/UserGuard';
+import AdminGuard from './_helpers/AdminGuard';
+import NotAuthGuard from './_helpers/NotAuthGuard';
+import ClientRouter from './pages/Client/ClientRouter';
+
 
 
 function App() {
@@ -12,13 +16,27 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-        <Route path="/*" element={<PublicRouter/>}/>  
-        <Route path="/admin/*" element={
-          <AuthGuard>
-              <AdminRouter/>
-          </AuthGuard> 
-        }/>
-        <Route path="/auth/*" element={<AuthRouter/>}/>
+          <Route path="/*" element={
+            <NotAuthGuard>
+                <PublicRouter/>
+            </NotAuthGuard>
+        
+            }/>  
+
+          <Route path="/user/*" element={
+            <UserGuard>
+                <ClientRouter/>
+            </UserGuard> 
+          }/>
+
+          <Route path="/admin/*" element={
+            <AdminGuard>
+                <AdminRouter/>
+            </AdminGuard> 
+          }/>
+
+
+          <Route path="/auth/*" element={<AuthRouter/>}/>
         </Routes>
                 
       </BrowserRouter>

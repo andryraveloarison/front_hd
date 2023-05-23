@@ -1,13 +1,9 @@
 import React from 'react';
 
-
-
 const Home = () => {
-
-    console.log('retour')
     return (
         <div>
-            Bienvenu !
+            User ni se connecter
         </div>
     );
 };

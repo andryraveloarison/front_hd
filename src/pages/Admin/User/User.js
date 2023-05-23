@@ -23,10 +23,7 @@ const User = () => {
         
     },[])
 
-    // const marcel =(userId) => {
-    //     console.log('click')
-    //     navigate("../edit/"+userId, {replace: true})
-    // }
+
 
 
     return (

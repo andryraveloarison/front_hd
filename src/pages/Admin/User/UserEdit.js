@@ -21,6 +21,8 @@ const UserEdit = () => {
 
     const onSubmit=(e) =>{
         e.preventDefault()
+        console.log(user)
+
         userService.updateUser(user)
             .then(res => {
                 navigate('../index')
