@@ -5,7 +5,7 @@ import Error from '@/_utils/Error';
 
 import { ALayout, Dashboard } from '@/pages/Admin'
 import { User,UserAdd,UserEdit } from '@/pages/Admin/User'
-import { Ticket,TicketEdit } from '@/pages/Admin/Ticket'
+import { Ticket,TicketCurrent } from '@/pages/Admin/Ticket'
 
 
 
@@ -24,7 +24,7 @@ const AdminRouter = () => {
             </Route> 
             <Route path="ticket">
                 <Route path="index" element={<Ticket/>}/>
-                <Route path="edit" element={<TicketEdit/>}/> 
+                <Route path="current" element={<TicketCurrent/>}/> 
             </Route> 
             
 

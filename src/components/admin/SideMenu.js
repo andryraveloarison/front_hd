@@ -19,7 +19,7 @@ const SideMenu = () => {
                     Ticket
                     <ul>
                         <li><Link to="/admin/ticket/index">Liste</Link></li>
-                        <li><Link to="/admin/ticket/edit">Modifier</Link></li>
+                        <li><Link to="/admin/ticket/current">En cours</Link></li>
                     </ul>
                 </li>
             </ul>

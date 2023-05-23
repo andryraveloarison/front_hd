@@ -1,2 +1,2 @@
 export {default as Ticket } from './Ticket'
-export {default as TicketEdit } from './TicketEdit'
+export {default as TicketCurrent } from './TicketCurrent'

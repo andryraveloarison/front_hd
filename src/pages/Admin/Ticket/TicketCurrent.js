@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { ticketService,statuService } from '@/_services';
 
-const Ticket = () => {
+const TicketCurrent = () => {
     const [tickets,setTickets] = useState([])
     //let navigate = useNavigate()
     const flag = useRef(false)
@@ -11,7 +11,7 @@ const Ticket = () => {
 
         if(flag.current === false){
 
-            ticketService.getAll()
+            ticketService.getCurrent()
             .then(res => {
             setTickets(res.data.ticket)
             })
@@ -62,6 +62,21 @@ const Ticket = () => {
           setTickets(updatedTicket);
     }
 
+    const supprimer = (id) => {
+        statuService.supprimer(id)
+        .then(res => {
+            alert('un ticket supprimer')
+        })
+        .catch(err => console.log(err))
+    }
+    
+    const cloturer = (id) => {
+        statuService.cloturer(id)
+        .then(res => {
+            alert('un ticket resolu')
+        })
+        .catch(err => console.log(err))
+    }
 
     return (
         <div className="User"> 
@@ -88,7 +103,11 @@ const Ticket = () => {
                         <td>{ticket.type}</td>
                         <td>{ticket.contenu}</td>
                         <td>{statuService.getStatu(ticket.statuId)}</td>
-                        
+                        <td>
+                        <button onClick={() => action(ticket.userTicket)}>{statuService.getAction(ticket.statuId)}</button>
+                        <button onClick={() => supprimer(ticket.userTicket)}>supprimer</button>
+                        <button onClick={() => cloturer(ticket.userTicket)}>cloturer</button>
+                        </td>
                     </tr>
                     ))
                 )}
@@ -99,4 +118,4 @@ const Ticket = () => {
     );
 };
 
-export default Ticket;
+export default TicketCurrent;

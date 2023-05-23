@@ -43,10 +43,7 @@ let getUserRole = () => {
 }
 
 
-// Ticket
-let getAllTickets = () => {
-    return Axios.get('/ticket')
-}
+
 
 export const userService = {
     addUser,
@@ -55,6 +52,5 @@ export const userService = {
     updateUser,
     getUserConnected,
     getUserRole,
-    getAllTickets,
 }
 

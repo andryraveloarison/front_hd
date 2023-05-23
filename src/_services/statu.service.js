@@ -7,15 +7,17 @@ const statu = [
     "supprime", //3
     "nouveau",  //4
     "en cours", //5
-    "en attente",   //6
-    "resolu",   //7
+    "resolu",   //6
+    "en attente",//7
+
 ]
 
 const action = [
     "resoudre", //4
     "mettre en attente",  //5
     "resoudre", //6
-    "resolu",   //7
+    "resoudre", //7
+    "resolu",   //8
 ]
 
 
@@ -30,14 +32,27 @@ let getAction = (id) => {
 }
 
 
-let supprimerTicket = (id) => {
+let supprimer = (id) => {
     return Axios.get('/statu/supprimer/'+id)
 }
 
-let cloturerTicket = (id) => {
+let cloturer = (id) => {
     return Axios.get('/statu/cloturer/'+id)
 }
 
+let enAttente = (id) => {
+    return Axios.get('/statu/enAttente/'+id)
+}
+
+let enCours = (id) => {
+    return Axios.get('/statu/enCours/'+id)
+}
+
 export const statuService = {
-    getStatu,getAction,supprimerTicket,cloturerTicket
+    getStatu,
+    getAction,
+    supprimer,
+    cloturer,
+    enAttente,
+    enCours
 }
