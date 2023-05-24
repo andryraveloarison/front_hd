@@ -25,44 +25,6 @@ const Ticket = () => {
 
 
 
-    const action = (id) => {   
-
-        const updatedTicket = tickets.map((ticket) => {
-
-
-            if (ticket.userTicket === id) {
-              // Modifier l'élément avec l'ID spécifique (dans cet exemple, l'ID est 2)
-              if (ticket.statuId === 5 ) {
-
-                
-                statuService.enAttente(id)
-                return {
-                    ...ticket,
-                    statuId: 7,
-                    // Autres propriétés modifiées
-                  };
-              }else{
-
-                statuService.enCours(id)
-
-                return {                    
-                    ...ticket,
-                    statuId: 5,
-                    // Autres propriétés modifiées
-                  };
-
-              }
-
-             
-            }
-            return ticket;
-          });
-
-          
-          setTickets(updatedTicket);
-    }
-
-
     return (
         <div className="User"> 
             Liste ticket
