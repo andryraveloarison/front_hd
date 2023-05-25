@@ -1,9 +1,14 @@
 import React from 'react';
+import { selectUser } from '../../features/userSlice';
+import { useSelector } from 'react-redux';
 
 const Home = () => {
+
+    const user = useSelector(selectUser)
+
     return (
         <div>
-            User ni se connecter
+            Bienvenu utilisateur : {user.nom} 
         </div>
     );
 };

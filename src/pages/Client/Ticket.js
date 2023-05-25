@@ -1,19 +1,31 @@
 import React, { useEffect, useState, useRef } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { ticketService,statuService } from '@/_services';
+import { selectUser } from '@/features/userSlice';
+import { useSelector } from 'react-redux';
 
 const Ticket = () => {
+    const user = useSelector(selectUser)
+
     const [tickets,setTickets] = useState([])
-    //let navigate = useNavigate()
+    const [newTickets,setNewTickets] = useState({
+        "titre":"",
+        "contenu":"",
+        "userId":user.id,
+    })
+
     const flag = useRef(false)
+
 
     useEffect (()=>{
 
         if(flag.current === false){
 
-            ticketService.getAll()
+            ticketService.getMyTickets(user.id)
             .then(res => {
+
             setTickets(res.data.ticket)
+
             })
             .catch(err => console.log(err))
         }
@@ -24,16 +36,45 @@ const Ticket = () => {
     },[])
 
 
+    const onChange=(e) =>{
+        setNewTickets({
+            ...newTickets,
+            [e.target.name]:e.target.value,
+           
+        })
+    }
+
+
+
+    const onSubmit=(e) =>{
+        e.preventDefault()
+
+        setNewTickets({
+            ...newTickets,
+            
+        })
+
+        
+        console.log(newTickets)
+
+        ticketService.addTicket(newTickets)
+            .then(res => {
+                window.location.reload();
+            })
+            .catch(err => console.log(err))
+        
+    }
+
+
 
     return (
         <div className="User"> 
-            Liste ticket
+            Liste de mes ticket
             {/* <button onClick={()=>marcel(4)}> User 4</button> */}
         <table>
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Utilisateur</th>
                     <th>titre</th>
                     <th>contenu</th>
                     <th>status</th>
@@ -48,7 +89,6 @@ const Ticket = () => {
                     tickets.map(ticket => (
                     <tr key={ticket.id}>
                         <td>{ticket.id}</td>
-                        <td>{ticket.userNom}</td>
                         <td>{ticket.titre}</td>
                         <td>{ticket.contenu}</td>
                         <td>{statuService.getStatu(ticket.statuId)}</td>
@@ -59,6 +99,26 @@ const Ticket = () => {
             </tbody>
 
         </table>
+
+            <div className="UserEdit">
+                <form onSubmit={onSubmit}>
+                Creer un ticket
+
+                <div className="group">
+                    <label htmlFor="titre">Titre</label>
+                    <input type="text" name="titre" value={newTickets.titre} onChange={onChange}/>
+                </div>
+                <div className="group">
+                    <label htmlFor="contenu">Contenu</label>
+                    <input type="text" name="contenu" value={newTickets.contenu} onChange={onChange}/>
+                </div>
+                <div className="group">
+                    <button>Creer</button>
+                </div>
+
+            </form>
+            </div>
+        
         </div>
     );
 };

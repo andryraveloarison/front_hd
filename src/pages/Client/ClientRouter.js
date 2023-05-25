@@ -2,7 +2,7 @@ import React from 'react';
 import {Routes, Route} from 'react-router-dom'
 
 
-import { Layout, Home, Service, Contact } from '@/pages/Client'
+import { Layout, Home, Service, Contact, Ticket } from '@/pages/Client'
 import Error from '@/_utils/Error';
 
 
@@ -17,7 +17,7 @@ const ClientRouter = () => {
             <Route path="/home" element={<Home/>}/>
             <Route path="/service" element={<Service/>}/>
             <Route path="/contact" element={<Contact/>}/>
-
+            <Route path="/ticket" element={<Ticket/>}/>
 
             <Route path="*" element={<Error/>}/>
 

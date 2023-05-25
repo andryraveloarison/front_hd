@@ -5,14 +5,15 @@ import { accountService } from '@/_services/account.service';
 const Header = () => {
     let navigate = useNavigate()
 
-    const logout = () => {
+    const logout = (e) => {
+        
         accountService.logout()
         navigate('/')
     }
     return (
         <div className="AHeader">
             Header de l'admin
-            <button onClick={logout}>Logout</button>
+            <button onClick={(e) => logout(e)}>Logout</button>
         </div>
     );
 };

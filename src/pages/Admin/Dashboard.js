@@ -1,31 +1,15 @@
-import React, {useRef,useEffect,useState} from 'react';
-import { userService } from '@/_services';
+import React from 'react';
+import { selectUser } from '../../features/userSlice';
+import { useSelector } from 'react-redux';
 
 
 const Dashboard = () => {
 
-    const [users,setUsers] = useState([])
-    const flag = useRef(false)
-
-    useEffect (()=>{
-
-        if(flag.current === false){
-
-            userService.getUserConnected()
-            .then(res => {
-                setUsers(res.data)
-            })
-            .catch(err => console.log(err))
-        }
-
-        return () => flag.current = true
-        
-    },[])
-
+    const user = useSelector(selectUser)
 
     return (
         <div className="Dashboard">
-            Ici la dashboard {users.nom}
+            Ici la dashboard {user.nom}
         </div>
     );
 };

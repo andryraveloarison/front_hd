@@ -14,7 +14,9 @@ const NotAuthGuard = ({children}) => {
             res => {
             setRole(res.data.roleId)
                 })
-        .catch(err => console.log(err))
+        .catch(
+            err => console.log(err)
+            )
     
     
         

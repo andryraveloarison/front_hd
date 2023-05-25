@@ -30,7 +30,7 @@ const TicketCurrent = () => {
         const updatedTicket = tickets.map((ticket) => {
 
 
-            if (ticket.userTicket === id) {
+            if (ticket.statu_user_ticket === id) {
               // Modifier l'élément avec l'ID spécifique (dans cet exemple, l'ID est 2)
               if (ticket.statuId === 5 ) {
 
@@ -86,7 +86,8 @@ const TicketCurrent = () => {
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>type</th>
+                    <th>Utilisateur</th>
+                    <th>titre</th>
                     <th>contenu</th>
                     <th>status</th>
                 </tr>
@@ -100,13 +101,14 @@ const TicketCurrent = () => {
                     tickets.map(ticket => (
                     <tr key={ticket.id}>
                         <td>{ticket.id}</td>
-                        <td>{ticket.type}</td>
+                        <td>{ticket.userNom}</td>
+                        <td>{ticket.titre}</td>
                         <td>{ticket.contenu}</td>
                         <td>{statuService.getStatu(ticket.statuId)}</td>
                         <td>
-                        <button onClick={() => action(ticket.userTicket)}>{statuService.getAction(ticket.statuId)}</button>
-                        <button onClick={() => supprimer(ticket.userTicket)}>supprimer</button>
-                        <button onClick={() => cloturer(ticket.userTicket)}>cloturer</button>
+                        <button onClick={() => action(ticket.statu_user_ticket)}>{statuService.getAction(ticket.statuId)}</button>
+                        <button onClick={() => supprimer(ticket.statu_user_ticket)}>supprimer</button>
+                        <button onClick={() => cloturer(ticket.statu_user_ticket)}>cloturer</button>
                         </td>
                     </tr>
                     ))

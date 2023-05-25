@@ -21,6 +21,7 @@ const Header = () => {
                         <li><Link to="home">Accueil</Link></li>
                         <li><Link to="service">Service</Link></li>
                         <li><Link to="contact">Contact</Link></li>
+                        <li><Link to="ticket">Ticket</Link></li>
                         <button onClick={logout}>Logout</button>
 
                     </ul>

@@ -1,31 +1,26 @@
 import { Navigate } from "react-router-dom";
-import { accountService,userService } from '@/_services';
-import { useState } from "react";
+import { accountService } from '@/_services';
+import { selectUser } from '@/features/userSlice';
+import { useSelector } from 'react-redux';
 
 
-const AuthGuard = ({children}) => {
+const UserGuard = ({children}) => {
 
-    const [role, setRole] = useState()
+    const user = useSelector(selectUser)
 
     if(!accountService.isLogged()){
         return <Navigate to="/login"/>
     }
 
-    userService.getUserRole().then(
-        res => {
-        setRole(res.data.roleId)
-            })
-    .catch(err => console.log(err))
 
-
-    if(role===1){
+    if(user.role===1){
         return  <Navigate to="/admin"/>
     }
-    if(role === 2)
+    if(user.role === 2)
     {
         return children
     }
 
 };
 
-export default AuthGuard;
+export default UserGuard;

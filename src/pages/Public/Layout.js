@@ -9,7 +9,6 @@ const Layout = () => {
     if(accountService.isLogged()){
         return <Navigate to="/admin/"/>
     }
-    console.log('not auth guard')
 
 
     return (

@@ -8,7 +8,6 @@ import Error from '@/_utils/Error';
 
 const PublicRouter = () => {
 
-    console.log('test')
     return (
         <div>
         <Routes>
