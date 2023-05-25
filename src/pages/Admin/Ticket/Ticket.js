@@ -36,6 +36,7 @@ const Ticket = () => {
                     <th>Utilisateur</th>
                     <th>titre</th>
                     <th>contenu</th>
+                    <th>date</th>
                     <th>status</th>
                 </tr>
             </thead>
@@ -51,6 +52,7 @@ const Ticket = () => {
                         <td>{ticket.userNom}</td>
                         <td>{ticket.titre}</td>
                         <td>{ticket.contenu}</td>
+                        <td>{ticket.createdAt}</td>
                         <td>{statuService.getStatu(ticket.statuId)}</td>
                         
                     </tr>
