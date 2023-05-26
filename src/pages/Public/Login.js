@@ -59,6 +59,7 @@ const Login = () => {
     return (
         <form onSubmit={onSubmit}>
             <div className="group">
+                Se connecter
                 <label htmlFor="login">Identifiant</label>
                 <input type="text" name="email" value={credentials.email} onChange={onChange}></input>
             </div>

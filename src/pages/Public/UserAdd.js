@@ -23,7 +23,7 @@ const UserAdd = () => {
         e.preventDefault()
         userService.addUser(user)
             .then(res => {
-                navigate('../index')
+                navigate('/login')
             })
             .catch(err => console.log(err))
         
@@ -32,9 +32,9 @@ const UserAdd = () => {
 
     return (
         <div className="UserEdit">
-        Creer un compte
+        
         <form onSubmit={onSubmit}>
-
+        S'inscrire
         <div className="group">
             <label htmlFor="nom">Nom</label>
             <input type="text" name="nom" value={user.nom} onChange={onChange}/>
