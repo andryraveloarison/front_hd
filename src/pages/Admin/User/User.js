@@ -1,30 +1,19 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { userService } from '@/_services';
+import { useQuery } from 'react-query';
+
 
 const User = () => {
-    //let navigate = useNavigate()
 
-    const [users,setUsers] = useState([])
-    const flag = useRef(false)
-
-    useEffect (()=>{
-
-        if(flag.current === false){
-
-            userService.getAllUsers()
-            .then(res => {
-                setUsers(res.data.user)
-            })
-            .catch(err => console.log(err))
-        }
-
-        return () => flag.current = true
-        
-    },[])
+    const { isLoading, isError, data: users = [], error } = useQuery(
+        'users',
+        () => userService.getAllUsers().then ((res)=> res.data.user)
+      );
 
 
-
+      if (isLoading) return <div>Loading...</div>;
+      if (isError) return <div>{error.message}</div>;
 
     return (
         <div className="User"> 
