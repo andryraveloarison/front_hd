@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 // import { useNavigate } from 'react-router-dom';
-import { ticketService, statuService } from '@/_services';
+import { ticketService, statuService, conversationService } from '@/_services';
+import { selectUser } from '@/features/userSlice';
+import { useSelector } from 'react-redux';
 
 const TicketCurrent = () => {
+  const userConnected = useSelector(selectUser)
+
   const [load, setLoad] = useState("true")
   const [ListTickets,setListeTickets] = useState([])
   
@@ -23,17 +27,21 @@ const TicketCurrent = () => {
   }
   if (isError) return <div>{error.message}</div>;
   
-  const action = (id) => {   
+  const action = (statu_user_ticket, userId, ticketId) => {   
+
+    console.log('statu_user_ticket:', statu_user_ticket);
+    console.log('userId:', userId);
+    console.log('id:', ticketId);
 
     const updatedTicket = ListTickets.map((ticket) => {
 
 
-        if (ticket.statu_user_ticket === id) {
+        if (ticket.statu_user_ticket === statu_user_ticket) {
           // Modifier l'élément avec l'ID spécifique (dans cet exemple, l'ID est 2)
           if (ticket.statuId === 5 ) {
 
             
-            statuService.enAttente(id)
+            statuService.enAttente(statu_user_ticket)
             return {
                 ...ticket,
                 statuId: 7,
@@ -41,7 +49,19 @@ const TicketCurrent = () => {
               };
           }else{
 
-            statuService.enCours(id)
+            statuService.enCours(statu_user_ticket)
+            
+            if(ticket.statuId === 4){
+            const newconversation ={
+              "user":userId,
+              "admin":userConnected.id,
+              "ticketId":ticketId
+            } 
+
+            conversationService.addConversation(newconversation)
+          
+            }
+            
 
             return {                    
                 ...ticket,
@@ -109,7 +129,7 @@ return (
                     <td>{ticket.createdAt}</td>
                     <td>{statuService.getStatu(ticket.statuId)}</td>
                     <td>
-                    <button onClick={() => action(ticket.statu_user_ticket)}>{statuService.getAction(ticket.statuId)}</button>
+                    <button onClick={() => action(ticket.statu_user_ticket,ticket.userId,ticket.id)}>{statuService.getAction(ticket.statuId)}</button>
                     <button onClick={() => supprimer(ticket.statu_user_ticket)}>supprimer</button>
                     <button onClick={() => cloturer(ticket.statu_user_ticket)}>cloturer</button>
                     </td>

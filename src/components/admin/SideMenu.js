@@ -22,6 +22,9 @@ const SideMenu = () => {
                         <li><Link to="/admin/ticket/current">En cours</Link></li>
                     </ul>
                 </li>
+                <li>
+                    <li><Link to="/admin/chat/index">Chat</Link></li>
+                </li>
             </ul>
         </div>
     );
