@@ -22,6 +22,7 @@ const Header = () => {
                         <li><Link to="service">Service</Link></li>
                         <li><Link to="contact">Contact</Link></li>
                         <li><Link to="ticket">Ticket</Link></li>
+                        <li><Link to="chat">Discussion</Link></li>
                         <button onClick={logout}>Logout</button>
 
                     </ul>
