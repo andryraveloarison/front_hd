@@ -4,8 +4,11 @@ import { useQuery } from 'react-query';
 import { ticketService, statuService, conversationService } from '@/_services';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
+
 
 const TicketCurrent = () => {
+  let navigate = useNavigate()
   const userConnected = useSelector(selectUser)
 
   const [load, setLoad] = useState("true")
@@ -58,7 +61,11 @@ const TicketCurrent = () => {
               "ticketId":ticketId
             } 
 
-            conversationService.addConversation(newconversation)
+            conversationService.addConversation(newconversation).then(res => {
+              alert('Une conversation a ete cree')
+              navigate('/admin/chat/index') 
+            })
+          .catch(err => console.log(err))
           
             }
             

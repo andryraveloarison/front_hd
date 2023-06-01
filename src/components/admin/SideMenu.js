@@ -23,7 +23,7 @@ const SideMenu = () => {
                     </ul>
                 </li>
                 <li>
-                    <li><Link to="/admin/chat/index">Chat</Link></li>
+                    <li><Link to="/admin/chat/index">Discussion</Link></li>
                 </li>
             </ul>
         </div>
