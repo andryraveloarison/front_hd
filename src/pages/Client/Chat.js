@@ -72,6 +72,11 @@ const Chat = () => {
         .catch(err => console.log(err))
     }
 
+      if(conversations.length !== 0){
+        const lastConversation = conversations.slice(-1)[0]; // Obtenir le dernier élément de conversations
+        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId } = lastConversation;
+        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId);
+    }
 
 
     const sendMessage =(e) =>{
@@ -151,7 +156,7 @@ const Chat = () => {
                     </div>
                     <div className="ml-6">
                         <h3 className='text-lg '> {messages.contenu.receiverNom} </h3>
-                        <p className="text-lg font-light text-gray-600"> {messages.contenu.statuId}</p>
+                        <p className="text-lg font-light text-gray-600"> {statuService.getStatu(messages.contenu.statuId)}</p>
                     </div>
                 </div>
             )}

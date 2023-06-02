@@ -55,7 +55,11 @@ const Chat = () => {
       if (isLoading) return <div>Loading...</div>;
       if (isError) return <div>{error.message}</div>;
 
-    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId) => {
+
+
+
+    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket) => {
+
         
         messageService.getMessage(conversationId)
         .then(res => {
@@ -64,6 +68,7 @@ const Chat = () => {
                                  ticketContenu:ticketContenu,
                                  receiverNom:receiverNom,
                                  statuId:statuId,
+                                 statu_user_ticket:statu_user_ticket,
                                  },
                         conversationId:conversationId,
                         receiverId: receiverId
@@ -72,6 +77,18 @@ const Chat = () => {
         .catch(err => console.log(err))
     }
 
+
+
+
+    if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
+        const lastConversation = conversations.slice(-1)[0]; // Obtenir le dernier élément de conversations
+        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,statu_user_ticket } = lastConversation;
+        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket);
+    }
+
+    
+    
+    
 
     
     const sendMessage =(e) =>{
@@ -97,6 +114,18 @@ const Chat = () => {
 
     }
 
+
+    const cloturer = (id) => {
+        statuService.cloturer(id)
+        .then(res => {
+            alert('Le ticket resolu')
+            window.location.reload();
+    
+        })
+        .catch(err => console.log(err))
+    }
+
+
     
     return (
         <div className='w-screen flex'>
@@ -118,10 +147,11 @@ const Chat = () => {
                             conversations.length === 0 ? (
                                 <div className='text-center text-lg font-semibold mt-24'> Aucun ticket en cours</div>
                               ) : (
-                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId})=>{
+                                
+                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket})=>{
                                 return( 
                                     <div className='flex items-center py-8 border-b border-b-gray-300'>
-                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId)}>
+                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket)}>
                                             <div>
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
@@ -130,6 +160,8 @@ const Chat = () => {
                                                     <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>
+                                       
+
                                     </div>
                                 )
                             } )
@@ -140,19 +172,29 @@ const Chat = () => {
             <div className='w-[50%]  h-screen border flex flex-col items-center'>
 
             {
-                Object.keys(messages.contenu).length === 0? (
-                        <div className='text-center text-lg font-semibold mt-24'> selectionner un ticket</div>
+                Object.keys(messages.contenu).length === 0 && conversations.length === 0? (
+                        <div className='text-center text-lg font-semibold mt-24'> selectionner un ticket tt</div>
                 ) : (
-                                            
-                <div className="w-[75%] bg-secondary h-[80px] mt-14 rounded-full flex items-center px-14 ">
+                
+                    <div className="w-[75%] bg-secondary h-[100px] mt-14 rounded-full flex justify-between items-center px-14">
                     <div>
-                        <img src={Avatar} width={60} height={60}/>
+                      <img src={Avatar} width={60} height={60}/>
                     </div>
                     <div className="ml-6">
-                        <h3 className='text-lg '> {messages.contenu.receiverNom} </h3>
-                        <p className="text-lg font-light text-gray-600"> {messages.contenu.statuId}</p>
+                      <h3 className='text-lg'> {messages.contenu.receiverNom} </h3>
+                      <p className="text-lg font-light text-gray-600"> {statuService.getStatu(messages.contenu.statuId)}</p>
                     </div>
-                </div>
+                    <div className="flex items-center">
+                      <div className="ml-auto">
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold h-10 w-16 rounded" onClick={() => cloturer(messages.contenu.statu_user_ticket)}>Resolu</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                
+
+                              
+               
             )}
 
                 <div className='h-[75%] w-full overflow-scroll shadow-sm'>

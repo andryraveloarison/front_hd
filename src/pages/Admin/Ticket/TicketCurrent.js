@@ -99,7 +99,7 @@ const supprimer = (id) => {
 const cloturer = (id) => {
     statuService.cloturer(id)
     .then(res => {
-        alert('un ticket resolu')
+        alert('le ticket resolu')
         window.location.reload();
 
     })
