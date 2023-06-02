@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery} from 'react-query';
 import { ticketService, statuService } from '@/_services';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
+import { io } from 'socket.io-client'
+
 
 const Ticket = () => {
   const user = useSelector(selectUser);
@@ -11,6 +13,29 @@ const Ticket = () => {
     contenu: '',
     userId: user.id,
   });
+
+  //Socket
+    const [socket, setSocket] = useState(null)
+
+    useEffect(() => {
+		setSocket(io('http://localhost:8080'))
+	}, [])
+
+
+    useEffect(() => {
+        if(socket)
+        {
+            const data = {
+                userId: user.id,
+                userRole: user.role,
+            }
+            socket.emit('addUser', {data});
+            
+        }
+		
+	}, [socket])
+
+
 
   const { isLoading, isError, data: tickets, error } = useQuery(
     ['tickets', user.id],
@@ -36,11 +61,16 @@ const Ticket = () => {
         
     })
 
+    if(socket){
+      socket.emit('sendNotification', " Nouveau ticket ");
+  }
+
     
     console.log(newTickets)
 
     ticketService.addTicket(newTickets)
         .then(res => {
+
             window.location.reload();
         })
         .catch(err => console.log(err))

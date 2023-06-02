@@ -28,12 +28,16 @@ const Chat = () => {
     useEffect(() => {
         if(socket)
         {
-            socket.emit('addUser', user.id);
+            const data = {
+                userId: user.id,
+                userRole: user.role,
+            }
+            socket.emit('addUser', {data});
             socket.on('getUsers', users => {
                 console.log('activeUsers :>> ', users);
             })
             socket.on('getMessage', data => {
-              
+                console.log("mandray message = "+ data)
                 // Mettre à jour l'état avec le nouveau tableau
                 setMessages(prevState => ({
                 ...prevState, // Copie du state existant
@@ -41,6 +45,9 @@ const Chat = () => {
                 }));
            
             })
+            socket.on('getNotification', notification => {        
+                alert(notification)
+        })
         }
 		
 	}, [socket])
@@ -145,7 +152,7 @@ const Chat = () => {
                     <div>
                         {
                             conversations.length === 0 ? (
-                                <div className='text-center text-lg font-semibold mt-24'> Aucun ticket en cours</div>
+                                <></>
                               ) : (
                                 
                             conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket})=>{
@@ -173,7 +180,7 @@ const Chat = () => {
 
             {
                 Object.keys(messages.contenu).length === 0 && conversations.length === 0? (
-                        <div className='text-center text-lg font-semibold mt-24'> selectionner un ticket tt</div>
+                        <div className='text-center text-lg font-semibold mt-24'> Aucun ticket en cours</div>
                 ) : (
                 
                     <div className="w-[75%] bg-secondary h-[100px] mt-14 rounded-full flex justify-between items-center px-14">

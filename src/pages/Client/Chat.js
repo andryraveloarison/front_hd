@@ -28,7 +28,11 @@ const Chat = () => {
     useEffect(() => {
         if(socket)
         {
-            socket.emit('addUser', user?.id);
+            const data = {
+                            userId: user.id,
+                            userRole: user.role,
+                        }
+            socket.emit('addUser', {data});
             socket.on('getUsers', users => {
                 console.log('activeUsers :>> ', users);
             })
@@ -71,8 +75,8 @@ const Chat = () => {
         })
         .catch(err => console.log(err))
     }
-
-      if(conversations.length !== 0){
+    
+    if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
         const lastConversation = conversations.slice(-1)[0]; // Obtenir le dernier élément de conversations
         const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId } = lastConversation;
         fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId);
@@ -122,7 +126,7 @@ const Chat = () => {
                     <div>
                         {
                             conversations.length === 0 ? (
-                                <div className='text-center text-lg font-semibold mt-24'> Aucun ticket en cours</div>
+                                <></>
                               ) : (
                             conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId})=>{
                                 return( 
@@ -146,8 +150,8 @@ const Chat = () => {
             <div className='w-[50%]  h-screen border flex flex-col items-center'>
 
             {
-                Object.keys(messages.contenu).length === 0? (
-                        <div className='text-center text-lg font-semibold mt-24'> selectionner un ticket</div>
+                Object.keys(messages.contenu).length === 0 && conversations.length === 0? (
+                    <div className='text-center text-lg font-semibold mt-24'> Aucun ticket en cours</div>
                 ) : (
                                             
                 <div className="w-[75%] bg-secondary h-[80px] mt-14 rounded-full flex items-center px-14 ">

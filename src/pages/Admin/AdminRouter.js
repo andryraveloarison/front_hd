@@ -31,11 +31,11 @@ const AdminRouter = () => {
             <Route path="*" element={<Error/>}/>
 
           </Route>
-          <Route element={<AHeaderLayout/>}>
+          
             <Route path="chat">
                   <Route path="index" element={<Chat/>}/>
             </Route>   
-          </Route>
+          
         </Routes>
         </div>
     );
