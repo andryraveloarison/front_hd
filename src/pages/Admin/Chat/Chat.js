@@ -1,6 +1,6 @@
 import Avatar from '@/assets/avatar.svg'
 import Input from '@/components/Input';
-import { messageService, conversationService } from '@/_services';
+import { messageService, conversationService, statuService } from '@/_services';
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
@@ -16,15 +16,36 @@ const Chat = () => {
         })
 
     const [message,setMessage] = useState()
+
+    //Socket
     const [socket, setSocket] = useState(null)
 
     useEffect(() => {
 		setSocket(io('http://localhost:8080'))
 	}, [])
 
+
+    useEffect(() => {
+        if(socket)
+        {
+            socket.emit('addUser', user.id);
+            socket.on('getUsers', users => {
+                console.log('activeUsers :>> ', users);
+            })
+            socket.on('getMessage', data => {
+              
+                // Mettre à jour l'état avec le nouveau tableau
+                setMessages(prevState => ({
+                ...prevState, // Copie du state existant
+                messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
+                }));
+           
+            })
+        }
+		
+	}, [socket])
+
 	
-
-
 
     const { isLoading, isError, data: conversations, error } = useQuery(
         'conversations',
@@ -51,27 +72,6 @@ const Chat = () => {
         .catch(err => console.log(err))
     }
 
-    useEffect(() => {
-        if(socket)
-        {
-            socket.emit('addUser', user?.id);
-            socket.on('getUsers', users => {
-                console.log('activeUsers :>> ', users);
-            })
-            socket.on('getMessage', data => {
-                const nouveauxMessages = [...messages.messages, data]; // Copie du tableau existant et ajout du nouvel objet
-
-                console.log(messages.messages)
-                // Mettre à jour l'état avec le nouveau tableau
-                setMessages(prevState => ({
-                ...prevState, // Copie du state existant
-                messages: nouveauxMessages // Mise à jour du tableau messages.messages
-                }));
-               
-            })
-        }
-		
-	}, [socket])
 
     
     const sendMessage =(e) =>{
@@ -89,9 +89,6 @@ const Chat = () => {
             });
         }
         
-        
-    
-
         messageService.addMessage(newMessage).then(res => {
             
             setMessage('')
@@ -99,8 +96,6 @@ const Chat = () => {
         .catch(err => console.log(err))
 
     }
-
-  
 
     
     return (
@@ -121,7 +116,7 @@ const Chat = () => {
                     <div>
                         {
                             conversations.length === 0 ? (
-                                <div className='text-center text-lg font-semibold mt-24'> Aucun ticket selectionner ou aucun message</div>
+                                <div className='text-center text-lg font-semibold mt-24'> Aucun ticket en cours</div>
                               ) : (
                             conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId})=>{
                                 return( 
@@ -132,7 +127,7 @@ const Chat = () => {
                                             </div>
                                             <div className='ml-6'>
                                                     <h3 className='text-lg font-semibold'> {receiverNom} </h3>
-                                                    <p className="text-lg font-light text-gray-600"> {statuId}</p>
+                                                    <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>
                                     </div>
