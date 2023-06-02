@@ -4,7 +4,8 @@ import { messageService, conversationService } from '@/_services';
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { io } from 'socket.io-client'
 
 const Chat = () => {
 
@@ -15,6 +16,15 @@ const Chat = () => {
         })
 
     const [message,setMessage] = useState()
+    const [socket, setSocket] = useState(null)
+
+    useEffect(() => {
+		setSocket(io('http://localhost:8080'))
+	}, [])
+
+	
+
+
 
     const { isLoading, isError, data: conversations, error } = useQuery(
         'conversations',
@@ -41,14 +51,49 @@ const Chat = () => {
         .catch(err => console.log(err))
     }
 
+    useEffect(() => {
+        if(socket)
+        {
+            socket.emit('addUser', user?.id);
+            socket.on('getUsers', users => {
+                console.log('activeUsers :>> ', users);
+            })
+            socket.on('getMessage', data => {
+                const nouveauxMessages = [...messages.messages, data]; // Copie du tableau existant et ajout du nouvel objet
+
+                console.log(messages.messages)
+                // Mettre à jour l'état avec le nouveau tableau
+                setMessages(prevState => ({
+                ...prevState, // Copie du state existant
+                messages: nouveauxMessages // Mise à jour du tableau messages.messages
+                }));
+               
+            })
+        }
+		
+	}, [socket])
+
+    
     const sendMessage =(e) =>{
         e.preventDefault()
         const newMessage ={
             senderId:user.id,
             message: message,
             conversationId:messages.conversationId,
-        }      
+            receiverId: messages.receiverId
+        }  
+
+        if(socket){
+            socket.emit('sendMessage', {
+                newMessage
+            });
+        }
+        
+        
+    
+
         messageService.addMessage(newMessage).then(res => {
+            
             setMessage('')
         })
         .catch(err => console.log(err))
