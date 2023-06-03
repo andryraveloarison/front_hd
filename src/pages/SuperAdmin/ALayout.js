@@ -1,9 +1,10 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+
 import './admin.css'
 
-import Header from '@/components/admin/Header'
-import SideMenu from '@/components/admin/SideMenu'
+import Header from '@/components/superAdmin/Header'
+import SideMenu from '@/components/superAdmin/SideMenu'
 
 
 

@@ -10,6 +10,7 @@ let saveToken = (token) => {
 
 let logout = () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
 }
 
 let isLogged = () => {

@@ -3,7 +3,7 @@ import { accountService} from '@/_services';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 
-const AdminGuard = ({children}) => {
+const SuperAdminGuard = ({children}) => {
 
     
     const user = useSelector(selectUser)
@@ -17,14 +17,14 @@ const AdminGuard = ({children}) => {
     if(user.role===2){
         return  <Navigate to="/user"/>
     }
-    if(user.role ===3){
-        return <Navigate to="/superAdmin"/>
-    }
     if(user.role === 1){
+        return  <Navigate to="/admin"/>
+    }
+    if(user.role == 3){
         return children
     }
 
     return children
 };
 
-export default AdminGuard;
+export default SuperAdminGuard;

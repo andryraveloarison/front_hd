@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 // import { useNavigate } from 'react-router-dom';
-import { ticketService, statuService, conversationService } from '@/_services';
+import { ticketService, statuService, conversationService, userService } from '@/_services';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
@@ -13,13 +13,19 @@ const TicketCurrent = () => {
 
   const [load, setLoad] = useState("true")
   const [ListTickets,setListeTickets] = useState([])
+
+  const { Loading, Error, data: userAdmins = [],error } = useQuery('userAdmins', () =>
+  userService.getUserAdmin().then((res) => res.data.userAdmin)
+);
+
   
-  const { isLoading, isError, data: tickets = [],error } = useQuery('currentTickets', () =>
+  const { isLoading, isError, data: tickets = [],TicketError } = useQuery('currentTickets', () =>
     ticketService.getCurrent().then((res) => res.data.ticket)
   );
 
 
-  if (isLoading) {
+
+  if (isLoading || Loading) {
     return <div>Loading...</div>;
   } else {
     if(load === "true")
@@ -28,7 +34,7 @@ const TicketCurrent = () => {
       setLoad("false")
     }
   }
-  if (isError) return <div>{error.message}</div>;
+  if (error) return <div>{error.message}</div>;
   
   const action = (statu_user_ticket, userId, ticketId) => {   
 
@@ -37,6 +43,9 @@ const TicketCurrent = () => {
     console.log('id:', ticketId);
 
     const updatedTicket = ListTickets.map((ticket) => {
+
+      console.log(userAdmins)
+
 
 
         if (ticket.statu_user_ticket === statu_user_ticket) {
@@ -119,6 +128,7 @@ return (
                 <th>contenu</th>
                 <th>date</th>
                 <th>status</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -139,7 +149,16 @@ return (
                     <button onClick={() => action(ticket.statu_user_ticket,ticket.userId,ticket.id)}>{statuService.getAction(ticket.statuId)}</button>
                     <button onClick={() => supprimer(ticket.statu_user_ticket)}>supprimer</button>
                     <button onClick={() => cloturer(ticket.statu_user_ticket)}>cloturer</button>
+                    <ul>
+                      {
+                        userAdmins.map(userAdmin => (
+                          
+                          <li> {userAdmin.adminNom}</li>
+                        ))
+                      }
+                    </ul>
                     </td>
+
                 </tr>
                 ))
             )}

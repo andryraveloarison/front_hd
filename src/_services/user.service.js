@@ -5,7 +5,9 @@ let getAllUsers = () => {
     return Axios.get('/user')
 }
 
-
+let getUserAdmin = () => {
+    return Axios.get('/user/userAdmin')
+}
 
 let getUser = (uid) => {
     return Axios.get('/user/'+uid)
@@ -52,5 +54,6 @@ export const userService = {
     updateUser,
     getUserConnected,
     getUserRole,
+    getUserAdmin,
 }
 

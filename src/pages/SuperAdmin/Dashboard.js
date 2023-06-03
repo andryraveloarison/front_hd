@@ -9,7 +9,7 @@ const Dashboard = () => {
 
     return (
         <div className="Dashboard">
-            Ici la dashboard d'un admin: {user.nom}
+            Ici la dashboard du super admin {user.nom}
         </div>
     );
 };

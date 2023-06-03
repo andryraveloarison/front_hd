@@ -9,6 +9,7 @@ import { io } from 'socket.io-client'
 
 const Chat = () => {
 
+    
     const user = useSelector(selectUser)
     const[messages,setMessages] = useState({
         messages:[],
@@ -77,9 +78,9 @@ const Chat = () => {
     }
     
     if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
-        const lastConversation = conversations.slice(-1)[0]; // Obtenir le dernier élément de conversations
-        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId } = lastConversation;
-        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId);
+        const lastConversation = conversations.slice(0, 1)[0]; // Obtenir le dernier élément de conversations
+        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket } = lastConversation;
+        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket);
     }
 
 
