@@ -38,12 +38,16 @@ const Chat = () => {
                 console.log('activeUsers :>> ', users);
             })
             socket.on('getMessage', data => {
-              
-                // Mettre à jour l'état avec le nouveau tableau
-                setMessages(prevState => ({
-                ...prevState, // Copie du state existant
-                messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
-                }));
+
+                if(user.id === data.receiverId)
+                {
+                    console.log(data.receiverId)
+                    // Mettre à jour l'état avec le nouveau tableau
+                    setMessages(prevState => ({
+                        ...prevState, // Copie du state existant
+                        messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
+                        }));
+                }
            
             })
         }

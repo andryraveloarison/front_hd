@@ -39,6 +39,7 @@ const Chat = () => {
                 console.log('activeUsers :>> ', users);
             })
             socket.on('getMessage', data => {
+
                 console.log("mandray message = "+ data)
                 // Mettre à jour l'état avec le nouveau tableau
                 setMessages(prevState => ({
@@ -61,9 +62,19 @@ const Chat = () => {
 
                 alert(notification)
         })
+
+
+          // Fonction de nettoyage
+          return () => {
+            // Déconnecter le socket
+            socket.emit('disconnect', user.id);
+            socket.off(); // Supprimer tous les écouteurs d'événements
+          };
+
         }
+
 		
-	}, [socket])
+	}, [])
 
 	
 

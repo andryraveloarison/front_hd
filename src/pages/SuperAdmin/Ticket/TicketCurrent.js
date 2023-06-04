@@ -13,6 +13,9 @@ const TicketCurrent = () => {
 
   const [load, setLoad] = useState("true")
   const [ListTickets,setListeTickets] = useState([])
+  const [adminActive, setAdminActive] = useState({
+    
+  })
 
   const { Loading, Error, data: userAdmins = [],error } = useQuery('userAdmins', () =>
   userService.getUserAdmin().then((res) => res.data.userAdmin)
@@ -36,8 +39,12 @@ const TicketCurrent = () => {
   }
   if (error) return <div>{error.message}</div>;
   
-  const action = (statu_user_ticket, userId, ticketId) => {   
+  const action = (statu_user_ticket, ticketId, userId) => {   
 
+    let adminId = adminActive[ticketId];
+    if(!adminId){
+      adminId = userConnected.id
+    }
     console.log('statu_user_ticket:', statu_user_ticket);
     console.log('userId:', userId);
     console.log('id:', ticketId);
@@ -66,13 +73,19 @@ const TicketCurrent = () => {
             if(ticket.statuId === 4){
             const newconversation ={
               "user":userId,
-              "admin":userConnected.id,
+              "admin":adminId,
               "ticketId":ticketId
             } 
 
+
             conversationService.addConversation(newconversation).then(res => {
-              alert('Une conversation a ete cree')
-              navigate('/admin/chat/index') 
+
+              if(adminId === userConnected.id)
+              {
+                alert('Une conversation a ete cree')
+                navigate('/admin/chat/index')
+              }
+ 
             })
           .catch(err => console.log(err))
           
@@ -105,15 +118,21 @@ const supprimer = (id) => {
     .catch(err => console.log(err))
 }
 
-const cloturer = (id) => {
-    statuService.cloturer(id)
-    .then(res => {
-        alert('le ticket resolu')
-        window.location.reload();
+const selectAdmin = (newUserAdmin, newTicketId) => {
 
-    })
-    .catch(err => console.log(err))
-}
+  setAdminActive(prevState => {
+    if (prevState.hasOwnProperty(newTicketId)) {
+      // The ticketId already exists, update userAdmin
+      return { ...prevState, [newTicketId]: newUserAdmin };
+    } else {
+      // The ticketId doesn't exist yet, add a new entry
+      return { ...prevState, [newTicketId]: newUserAdmin };
+    }
+  });
+
+};
+
+
 
 return (
     <div className="User"> 
@@ -128,11 +147,14 @@ return (
                 <th>contenu</th>
                 <th>date</th>
                 <th>status</th>
+                <th>Assignation admin</th>
                 
             </tr>
         </thead>
         <tbody>
-            {ListTickets.length === 0 ? (
+            {
+            
+            ListTickets.length === 0 ? (
                 <tr>
                 <td colSpan="5">Aucun ticket en cours</td>
                 </tr>
@@ -146,18 +168,35 @@ return (
                     <td>{ticket.createdAt}</td>
                     <td>{statuService.getStatu(ticket.statuId)}</td>
                     <td>
-                    <button onClick={() => action(ticket.statu_user_ticket,ticket.userId,ticket.id)}>{statuService.getAction(ticket.statuId)}</button>
-                    <button onClick={() => supprimer(ticket.statu_user_ticket)}>supprimer</button>
-                    <button onClick={() => cloturer(ticket.statu_user_ticket)}>cloturer</button>
-                    <ul>
-                      {
-                        userAdmins.map(userAdmin => (
-                          
-                          <li> {userAdmin.adminNom}</li>
-                        ))
-                      }
-                    </ul>
+                    { ticket.adminNom === "none" ? (
+                      <select name="userAdmin" id="userAdmin">
+                            {
+                            userAdmins.map(userAdmin => (
+
+
+                              <option value={userAdmin.id} onClick={() => selectAdmin(userAdmin.adminId,ticket.id)}>
+                                {userAdmin.adminNom}
+                              </option>
+                              
+                            ))
+                          }
+                        
+                        </select>
+                      ):(
+                        <span>{ticket.adminNom}</span>
+                      )}
+                        
                     </td>
+                    <td>
+                      {ticket.adminNom === "none" &&(
+                        <button onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId)}>
+                          {statuService.getAction(ticket.statuId)}
+                        </button>
+                      
+                      )}
+                      <button onClick={() => supprimer(ticket.statu_user_ticket)}>supprimer</button>
+                    </td>
+                   
 
                 </tr>
                 ))
