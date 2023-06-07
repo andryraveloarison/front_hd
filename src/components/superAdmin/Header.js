@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { accountService } from '@/_services/account.service';
 import { notificationService} from '@/_services/notification.service'
@@ -13,7 +13,8 @@ const Header = () => {
     let navigate = useNavigate()
     const user = useSelector(selectUser)
     const [nbNotif,setnbNotif] = useState(0)
-    const [notification, setNotification] = useState()
+    const [notification, setNotification] = useState([])
+    const nbNotifRef = useRef(nbNotif);
 
     useEffect(()=>{
         notificationService.get_nbNotif_NonLu(user.id).then((res) =>
@@ -25,8 +26,9 @@ const Header = () => {
       
     const toggleNotificationList = () => {
           setShowNotifications(!showNotifications);
-          setnbNotif()
-          notificationService.set_notification_Lu(user.id)
+          setnbNotif(0)
+          nbNotifRef.current = 0
+          //notificationService.set_notification_Lu(user.id)
         };
 
 
@@ -49,11 +51,17 @@ const Header = () => {
             socket.emit('addUser', {data});
             socket.on('getNotification', newNotification => {        
                     alert(newNotification)
-                    setNotification(
-                        (notification) => [...notification,newNotification]
-                    )
-                    let nb= nbNotif
-                    setnbNotif(nb+1)
+                    var today = new Date(),
+                    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                    setNotification((prevNotification) => 
+                        [
+                          ...prevNotification,
+                          {notification:newNotification,
+                          date: date,}
+
+                        ]);
+                    nbNotifRef.current += 1;
+                    setnbNotif(nbNotifRef.current);
             })
         }
 		
