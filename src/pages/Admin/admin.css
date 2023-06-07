@@ -11,8 +11,8 @@
 }
 
 .AHeader button{
-    width: 80px;
-    height: 20px;
+    width: 100px;
+    height: 50px;
 }
 .SideMenu{
     flex-grow: 1;

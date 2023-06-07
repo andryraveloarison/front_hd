@@ -38,6 +38,9 @@ const TicketCurrent = () => {
     }
   }
   if (error) return <div>{error.message}</div>;
+
+
+  
   
   const action = (statu_user_ticket, ticketId, userId) => {   
 
@@ -56,7 +59,7 @@ const TicketCurrent = () => {
 
 
         if (ticket.statu_user_ticket === statu_user_ticket) {
-          // Modifier l'élément avec l'ID spécifique (dans cet exemple, l'ID est 2)
+          // Modifier l'élément avec l'ID spécifique 
           if (ticket.statuId === 5 ) {
 
             
