@@ -23,6 +23,7 @@ const Chat = () => {
 
     useEffect(() => {
 		setSocket(io('http://localhost:8080'))
+        // eslint-disable-next-line
 	}, [])
 
 
@@ -39,9 +40,9 @@ const Chat = () => {
             })
             socket.on('getMessage', data => {
 
-                if(user.id === data.receiverId)
+                if(user.id === data.receiverId || user.id === data.senderId)
                 {
-                    console.log(data.receiverId)
+                    alert("add emessage")
                     // Mettre à jour l'état avec le nouveau tableau
                     setMessages(prevState => ({
                         ...prevState, // Copie du state existant
@@ -51,6 +52,7 @@ const Chat = () => {
            
             })
         }
+        // eslint-disable-next-line
 		
 	}, [socket])
 
@@ -94,7 +96,7 @@ const Chat = () => {
             senderId:user.id,
             message: message,
             conversationId:messages.conversationId,
-            receiverId: messages.receiverId
+            receiverId: messages.receiverId,
         }  
 
         if(socket){

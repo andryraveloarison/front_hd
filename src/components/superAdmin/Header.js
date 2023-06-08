@@ -91,8 +91,10 @@ const Header = () => {
                             notification.length === 0 ? (
                                 <li> Aucune notification</li>
                             ):(
-                                notification.map((notif) => (
-                            <li className="notificationItem mb-2">{notif.notification}</li>
+                                notification.slice(-5)
+                                .sort((a, b) => b.id - a.id)
+                                .map((notif) => (
+                                  <li className="notificationItem mb-2">{notif.notification}</li>
                                 ))
                             )
                         }

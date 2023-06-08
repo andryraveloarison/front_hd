@@ -86,7 +86,7 @@ const TicketCurrent = () => {
               if(adminId === userConnected.id)
               {
                 alert('Une conversation a ete cree')
-                navigate('/admin/chat/index')
+                navigate('/superAdmin/chat/index')
               }
  
             })

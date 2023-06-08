@@ -30,6 +30,7 @@ const Chat = () => {
     useEffect(() => {
         if(socket)
         {
+            alert("socket")
             const data = {
                 userId: user.id,
                 userRole: user.role,
