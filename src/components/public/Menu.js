@@ -1,16 +1,19 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import Control from "@/assets/control.png";
+import Logo from "@/assets/logo.png";
+import Chart_fill from "@/assets/Chart_fill.png";
+import Chat from "@/assets/Chat.png";
+import User from "@/assets/User.png";
+import Ticket from "@/assets/Calendar.png";
 
 const Menu = () => {
   const [open, setOpen] = useState(true);
   const Menus = [
-    { title: "Dashboard", src: "Chart_fill" },
-    { title: "Inbox", src: "Chat" },
-    { title: "Accounts", src: "User", gap: true },
-    { title: "Schedule ", src: "Calendar" },
-    { title: "Search", src: "Search" },
-    { title: "Analytics", src: "Chart" },
-    { title: "Files ", src: "Folder", gap: true },
-    { title: "Setting", src: "Setting" },
+    { title: "Dashboard", src: Chart_fill },
+    { title: "Utilisateur", src: User, gap: true },
+    { title: "Ticket ", src: Ticket },
+    { title: "Discussion", src: Chat },
   ];
 
   const handleToggle = () => {
@@ -20,20 +23,19 @@ const Menu = () => {
   return (
     <div className="flex">
       <div
-        className={` 
-        ${
-          open ? "w-72 " : "w-20  "
-        } bg-secondary h-screen p-5  pt-8 relative duration-300`}
+        className={`${
+          open ? "w-72" : "w-20 "
+        } bg-primary h-screen p-5  pt-8 relative duration-300`}
       >
         <img
-          src="../../assets/control.png"
+          src={Control}
           className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple
            border-2 rounded-full  ${!open && "rotate-180"}`}
           onClick={handleToggle}
         />
         <div className="flex gap-x-4 items-center">
           <img
-            src="@/assets/logo.png"
+            src={Logo}
             className={`cursor-pointer duration-500 ${
               open && "rotate-[360deg]"
             }`}
@@ -43,28 +45,53 @@ const Menu = () => {
               !open && "scale-0"
             }`}
           >
-            Designer
+            HelpDesk
           </h1>
         </div>
         <ul className="pt-6">
-          {Menus.map((Menu, index) => (
+          {Menus.map((menu, index) => (
             <li
               key={index}
-              className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
-              ${Menu.gap ? "mt-9" : "mt-2"} ${
-                index === 0 && "bg-light-white"
-              } `}
+              className={`rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-start gap-x-4 
+              ${menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"} ${open && "flex"}`}
             >
-              <img src={`@/assets/${Menu.src}.png`} />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                {Menu.title}
-              </span>
+              <img src={menu.src} />
+              {menu.src === User? (
+                <details className="items-start">
+                  <summary>
+                    User
+                  </summary>
+                  <ul>
+                    <li>
+                      <Link to="/superAdmin/user/index">Liste</Link>
+                    </li>
+                    <li>
+                      <Link to="/superAdmin/user/add">Ajouter</Link>
+                    </li>
+                  </ul>
+                </details>
+              ) : menu.src === Ticket? (
+                <details>
+                  <summary>
+                    Ticket
+                  </summary>
+                  <ul>
+                    <li>
+                      <Link to="/superAdmin/ticket/index">Liste</Link>
+                    </li>
+                    <li>
+                      <Link to="/superAdmin/ticket/current">En cours</Link>
+                    </li>
+                  </ul>
+                </details>
+              ) : (
+                <span className={`${!open && "hidden"} origin-left duration-200`}>
+                  {menu.title}
+                </span>
+              )}
             </li>
           ))}
         </ul>
-      </div>
-      <div className="h-screen flex-1 p-7">
-        <h1 className="text-2xl font-semibold ">Home Page</h1>
       </div>
     </div>
   );

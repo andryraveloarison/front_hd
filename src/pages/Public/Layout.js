@@ -13,20 +13,11 @@ const Layout = () => {
 
 
     return (
-        // <div className='Layout'>
-        //     <Header/>
+        <div className='Layout'>
+            <Header/>
             
-        //     <Outlet/>
-        // </div>
-
-            <div className="Alayout"> 
-            <Header/> 
-            <div id="admin">
-                <Menu/>
-                <div id ="admin_body"><Outlet/></div>
-            </div>
-
-            </div>
+            <Outlet/>
+        </div>
     );
 };
 

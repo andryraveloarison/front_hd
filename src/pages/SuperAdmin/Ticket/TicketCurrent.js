@@ -5,9 +5,13 @@ import { ticketService, statuService, conversationService, userService } from '@
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
+import ReactPaginate from 'react-paginate';
+
 
 
 const TicketCurrent = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 10;
   let navigate = useNavigate()
   const userConnected = useSelector(selectUser)
 
@@ -135,79 +139,101 @@ const selectAdmin = (newUserAdmin, newTicketId) => {
 
 };
 
+const pageCount = Math.ceil(tickets.length / pageSize);
+  const offset = currentPage * pageSize;
+  const currentPageTickets = tickets.slice(offset, offset + pageSize);
 
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
 
 return (
-    <div className="User"> 
-        Liste ticket
-        {/* <button onClick={()=>marcel(4)}> User 4</button> */}
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Utilisateur</th>
-                <th>titre</th>
-                <th>contenu</th>
-                <th>date</th>
-                <th>status</th>
-                <th>Assignation admin</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {
-            
-            ListTickets.length === 0 ? (
-                <tr>
-                <td colSpan="5">Aucun ticket en cours</td>
-                </tr>
-            ) : (
-                ListTickets.map(ticket => (
-                <tr key={ticket.id}>
-                    <td>{ticket.id}</td>
-                    <td>{ticket.userNom}</td>
-                    <td>{ticket.titre}</td>
-                    <td>{ticket.contenu}</td>
-                    <td>{ticket.createdAt}</td>
-                    <td>{statuService.getStatu(ticket.statuId)}</td>
-                    <td>
-                    { ticket.adminNom === "none" ? (
-                      <select name="userAdmin" id="userAdmin">
-                            {
-                            userAdmins.map(userAdmin => (
-
-
-                              <option value={userAdmin.id} onClick={() => selectAdmin(userAdmin.adminId,ticket.id)}>
-                                {userAdmin.adminNom}
-                              </option>
-                              
-                            ))
-                          }
-                        
-                        </select>
-                      ):(
-                        <span>{ticket.adminNom}</span>
-                      )}
-                        
-                    </td>
-                    <td>
-                      {ticket.adminNom === "none" &&(
-                        <button onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId)}>
-                          {statuService.getAction(ticket.statuId)}
-                        </button>
-                      
-                      )}
-                      <button onClick={() => supprimer(ticket.statu_user_ticket)}>supprimer</button>
-                    </td>
-                   
-
-                </tr>
-                ))
-            )}
-        </tbody>
-
-    </table>
-    </div>
+  <div className="User bg-gray-100 p-4 h-full">
+  <h1 className="text-2xl font-bold mb-4">Liste ticket</h1>
+  <table className="w-full">
+    <thead>
+      <tr>
+        <th className="px-4 py-2">#</th>
+        <th className="px-4 py-2">Utilisateur</th>
+        <th className="px-4 py-2">Titre</th>
+        <th className="px-4 py-2">Contenu</th>
+        <th className="px-4 py-2">Date</th>
+        <th className="px-4 py-2">Statut</th>
+        <th className="px-4 py-2">Assignation admin</th>
+        <th className="px-4 py-2">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {currentPageTickets.length === 0 ? (
+        <tr>
+          <td colSpan="7">Aucun ticket en cours</td>
+        </tr>
+      ) : (
+        currentPageTickets.map(ticket => (
+          <tr key={ticket.id}>
+            <td className="px-4 py-2">{ticket.id}</td>
+            <td className="px-4 py-2">{ticket.userNom}</td>
+            <td className="px-4 py-2">{ticket.titre}</td>
+            <td className="px-4 py-2">{ticket.contenu}</td>
+            <td className="px-4 py-2">{ticket.createdAt}</td>
+            <td className="px-4 py-2">{statuService.getStatu(ticket.statuId)}</td>
+            <td className="px-4 py-2">
+              {ticket.adminNom === "none" ? (
+                <select name="userAdmin" id="userAdmin">
+                  {userAdmins.map(userAdmin => (
+                    <option
+                      key={userAdmin.id}
+                      value={userAdmin.id}
+                      onClick={() => selectAdmin(userAdmin.adminId, ticket.id)}
+                    >
+                      {userAdmin.adminNom}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <span>{ticket.adminNom}</span>
+              )}
+            </td>
+            <td className="flex items-center">
+              {ticket.adminNom === "none" && (
+                <button onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId)}
+                  className="bg-blue-500 text-white font-bold rounded mr-2">
+                  {statuService.getAction(ticket.statuId)}
+                </button>
+              )}
+              <button onClick={() => supprimer(ticket.statu_user_ticket)}
+                className="bg-red-500 text-white font-bold rounded"
+                data-te-ripple-init>
+                supprimer
+              </button>
+            </td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+  <ReactPaginate
+        previousLabel={'Previous'}
+        nextLabel={'Next'}
+        breakLabel={'...'}
+        pageCount={pageCount}
+        marginPagesDisplayed={5}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageClick}
+        containerClassName={'pagination flex justify-center'}
+        activeClassName={'active'}
+        previousClassName={'pagination-item'}
+        nextClassName={'pagination-item'}
+        pageClassName={'pagination-item'}
+        breakClassName={'pagination-item'}
+        pageLinkClassName={'pagination-link'}
+        previousLinkClassName={'rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400'}
+        nextLinkClassName={'rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400'}
+        breakLinkClassName={'rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400'}
+        activeLinkClassName={'bg-primary-100 text-primary-700 font-medium'}
+        disabledClassName={'disabled'}
+      />
+</div>
 );
 };
 

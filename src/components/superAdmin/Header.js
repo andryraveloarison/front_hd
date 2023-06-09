@@ -75,14 +75,11 @@ const Header = () => {
     
 
     return (
-        <div className="AHeader flex items-center justify-between bg-gray-900 text-white py-4 px-6">
-            <h1 className="text-2xl">Header de l'admin</h1>
-            <div>
+        <div className="AHeader flex items-end  text-white py-4 px-6">
             <button
                 onClick={toggleNotificationList}
-                className="bg-blue-500 text-white font-bold  rounded "
                 > 
-                Notification{nbNotif}
+                Notification {nbNotif !==0 && (nbNotif)}
             </button>
                 {showNotifications && (
                 <div className="notificationList fixed top-10 bg-blue-500 py-4 my-4 w-40 ">
@@ -102,7 +99,7 @@ const Header = () => {
                     </ul>
                 </div>
                 )}
-            </div>
+            
             
            
 
