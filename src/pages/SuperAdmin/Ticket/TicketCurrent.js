@@ -148,11 +148,12 @@ const pageCount = Math.ceil(tickets.length / pageSize);
   };
 
 return (
-  <div className="User bg-gray-100 p-4 h-full">
+  <div className="User bg-gray-100 h-full">
   <h1 className="text-2xl font-bold mb-4">Liste ticket</h1>
   <table className="w-full">
-    <thead>
-      <tr>
+    <thead >
+    <tr class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+    >
         <th className="px-4 py-2">#</th>
         <th className="px-4 py-2">Utilisateur</th>
         <th className="px-4 py-2">Titre</th>
@@ -165,19 +166,23 @@ return (
     </thead>
     <tbody>
       {currentPageTickets.length === 0 ? (
-        <tr>
+        <tr class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+        >
           <td colSpan="7">Aucun ticket en cours</td>
         </tr>
       ) : (
         currentPageTickets.map(ticket => (
-          <tr key={ticket.id}>
-            <td className="px-4 py-2">{ticket.id}</td>
-            <td className="px-4 py-2">{ticket.userNom}</td>
-            <td className="px-4 py-2">{ticket.titre}</td>
-            <td className="px-4 py-2">{ticket.contenu}</td>
-            <td className="px-4 py-2">{ticket.createdAt}</td>
-            <td className="px-4 py-2">{statuService.getStatu(ticket.statuId)}</td>
-            <td className="px-4 py-2">
+          <tr key={ticket.id}
+          class="transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600 "
+          >
+          
+            <td className="px-4 py-2  text-center">{ticket.id}</td>
+            <td className="px-4 py-2  text-center">{ticket.userNom}</td>
+            <td className="px-4 py-2  text-center">{ticket.titre}</td>
+            <td className="px-4 py-2  text-center">{ticket.contenu}</td>
+            <td className="px-4 py-2  text-center">{ticket.createdAt}</td>
+            <td className="px-4 py-2  text-center">{statuService.getStatu(ticket.statuId)}</td>
+            <td className="px-4 py-2  text-center">
               {ticket.adminNom === "none" ? (
                 <select name="userAdmin" id="userAdmin">
                   {userAdmins.map(userAdmin => (
@@ -194,16 +199,20 @@ return (
                 <span>{ticket.adminNom}</span>
               )}
             </td>
-            <td className="flex items-center">
+            <td className="text-center">
               {ticket.adminNom === "none" && (
-                <button onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId)}
-                  className="bg-blue-500 text-white font-bold rounded mr-2">
+                <button
+                  onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId)}
+                  className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
+                >
                   {statuService.getAction(ticket.statuId)}
                 </button>
               )}
-              <button onClick={() => supprimer(ticket.statu_user_ticket)}
-                className="bg-red-500 text-white font-bold rounded"
-                data-te-ripple-init>
+              <button
+                onClick={() => supprimer(ticket.statu_user_ticket)}
+                className="bg-red-500 text-white font-bold rounded w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
+                data-te-ripple-init
+              >
                 supprimer
               </button>
             </td>

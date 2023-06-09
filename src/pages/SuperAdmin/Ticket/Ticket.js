@@ -25,10 +25,11 @@ const Ticket = () => {
 
   return (
     <div className={'User bg-gray-100 p-4 h-full'}>
-      <h1 className={'text-2xl font-bold mb-4'}>Liste ticket</h1>
+      <h1 className={'text-2xl font-bold mb-4'}>Liste ticket en cours</h1>
       <table className={'table-auto w-full'}>
         <thead>
-          <tr>
+          <tr              
+          class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
             <th className={'px-4 py-2'}>#</th>
             <th className={'px-4 py-2'}>Utilisateur</th>
             <th className={'px-4 py-2'}>Titre</th>
@@ -39,18 +40,21 @@ const Ticket = () => {
         </thead>
         <tbody>
           {currentPageTickets.length === 0 ? (
-            <tr>
+            <tr
+            class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
               <td colSpan="5">Aucun ticket en cours</td>
             </tr>
           ) : (
             currentPageTickets.map((ticket, index) => (
-              <tr key={offset + index}>
-                <td className={`px-4 py-2`}>{ticket.id}</td>
-                <td className={`px-4 py-2`}>{ticket.userNom}</td>
-                <td className={`px-4 py-2`}>{ticket.titre}</td>
-                <td className={`px-4 py-2`}>{ticket.contenu}</td>
-                <td className={`px-4 py-2`}>{ticket.createdAt}</td>
-                <td className={`px-4 py-2`}>{statuService.getStatu(ticket.statuId)}</td>
+              <tr 
+              key={offset + index}
+              class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+                <td className={`px-4 py-2  text-center`}>{ticket.id}</td>
+                <td className={`px-4 py-2  text-center`}>{ticket.userNom}</td>
+                <td className={`px-4 py-2  text-center`}>{ticket.titre}</td>
+                <td className={`px-4 py-2  text-center`}>{ticket.contenu}</td>
+                <td className={`px-4 py-2  text-center`}>{ticket.createdAt}</td>
+                <td className={`px-4 py-2  text-center`}>{statuService.getStatu(ticket.statuId)}</td>
               </tr>
             ))
           )}

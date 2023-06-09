@@ -5,9 +5,9 @@
 .AHeader{
     text-align: center;
     line-height: 50px;
-    background-color: grey;
+    background-color: rgb(14, 164, 190);
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 .AHeader button{
