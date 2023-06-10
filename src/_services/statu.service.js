@@ -14,7 +14,7 @@ const statu = [
 
 const action = [
     "resoudre", //4
-    "mettre en attente",  //5
+    "en attente",  //5
     "resoudre", //6
     "resoudre", //7
     "resolu",   //8

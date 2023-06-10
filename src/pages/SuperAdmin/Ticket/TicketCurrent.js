@@ -17,9 +17,7 @@ const TicketCurrent = () => {
 
   const [load, setLoad] = useState("true")
   const [ListTickets,setListeTickets] = useState([])
-  const [adminActive, setAdminActive] = useState({
-    
-  })
+  const [adminActive, setAdminActive] = useState({})
 
   const { Loading, Error, data: userAdmins = [],error } = useQuery('userAdmins', () =>
   userService.getUserAdmin().then((res) => res.data.userAdmin)
@@ -89,8 +87,11 @@ const TicketCurrent = () => {
 
               if(adminId === userConnected.id)
               {
-                alert('Une conversation a ete cree')
+                alert('Une conversation a ete cree vous et user')
                 navigate('/superAdmin/chat/index')
+              }else{
+                alert('Une conversation a ete cree entre Admin et user')
+                window.location.reload();
               }
  
             })
@@ -148,8 +149,8 @@ const pageCount = Math.ceil(tickets.length / pageSize);
   };
 
 return (
-  <div className="User bg-gray-100 h-full">
-  <h1 className="text-2xl font-bold mb-4">Liste ticket</h1>
+  <div className="User bg-gray-100 p-4 h-full">
+  <h1 className="text-2xl font-bold mb-4">Liste des tickets en cours</h1>
   <table className="w-full">
     <thead >
     <tr class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"

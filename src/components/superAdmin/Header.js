@@ -28,7 +28,7 @@ const Header = () => {
           setShowNotifications(!showNotifications);
           setnbNotif(0)
           nbNotifRef.current = 0
-          //notificationService.set_notification_Lu(user.id)
+          notificationService.set_notification_Lu(user.id)
         };
 
 
@@ -50,13 +50,13 @@ const Header = () => {
             }
             socket.emit('addUser', {data});
             socket.on('getNotification', newNotification => {        
-                    alert(newNotification)
+                    alert(newNotification.contenu)
                     var today = new Date(),
                     date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                     setNotification((prevNotification) => 
                         [
                           ...prevNotification,
-                          {notification:newNotification,
+                          {notification:newNotification.contenu,
                           date: date,}
 
                         ]);

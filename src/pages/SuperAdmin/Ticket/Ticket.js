@@ -25,7 +25,7 @@ const Ticket = () => {
 
   return (
     <div className={'User bg-gray-100 p-4 h-full'}>
-      <h1 className={'text-2xl font-bold mb-4'}>Liste ticket en cours</h1>
+      <h1 className={'text-2xl font-bold mb-4'}>Liste des tickets</h1>
       <table className={'table-auto w-full'}>
         <thead>
           <tr              
@@ -42,7 +42,7 @@ const Ticket = () => {
           {currentPageTickets.length === 0 ? (
             <tr
             class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
-              <td colSpan="5">Aucun ticket en cours</td>
+              <td colSpan="5">Aucun ticket </td>
             </tr>
           ) : (
             currentPageTickets.map((ticket, index) => (

@@ -146,6 +146,29 @@ const Chat = () => {
     }
 
 
+    const action = (statu_user_ticket) => {   
+
+        const updatedState = {
+            messages: messages.messages,
+            contenu: {
+              ...messages.contenu,
+              statuId : messages.contenu.statu_user_ticket === statu_user_ticket &&
+                                  messages.contenu.statuId === 5 ? 7 : 5,
+            },
+          };
+          
+          if(updatedState.contenu.statuId === 7){
+
+            statuService.enAttente(statu_user_ticket)
+
+          }else{
+            statuService.enCours(statu_user_ticket)
+
+          }
+          setMessages(updatedState);
+    }
+
+    
     
     return (
         <div className='w-screen flex'>
@@ -206,6 +229,12 @@ const Chat = () => {
                     </div>
                     <div className="flex items-center">
                       <div className="ml-auto">
+                      <button
+                        onClick={() => action(messages.contenu.statu_user_ticket)}
+                        className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-10" // Ajoutez les classes de dimensionnement ici
+                        >
+                        {statuService.getAction(messages.contenu.statuId)}
+                        </button>
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold h-10 w-16 rounded" onClick={() => cloturer(messages.contenu.statu_user_ticket)}>Resolu</button>
                       </div>
                     </div>
