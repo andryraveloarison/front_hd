@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 // import { useNavigate } from 'react-router-dom';
-import { ticketService, statuService, conversationService, userService } from '@/_services';
+import { ticketService, statuService, conversationService, userService, notificationService } from '@/_services';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
+import { io } from 'socket.io-client';
 import ReactPaginate from 'react-paginate';
 
 
@@ -28,6 +29,15 @@ const TicketCurrent = () => {
     ticketService.getCurrent().then((res) => res.data.ticket)
   );
 
+    // Socket
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+      setSocket(io('http://localhost:8080'));
+    }, []);
+
+
+
 
 
   if (isLoading || Loading) {
@@ -42,6 +52,8 @@ const TicketCurrent = () => {
   if (error) return <div>{error.message}</div>;
 
 
+
+  
   
   
   const action = (statu_user_ticket, ticketId, userId) => {   
@@ -115,6 +127,21 @@ const TicketCurrent = () => {
 
       
       setListeTickets(updatedTicket);
+
+      //NOTIFICATION
+      const notification =" Votre ticket est en cours, vous avez une discussion avec "+ adminId
+      if (socket) {
+        socket.emit('sendNotification', {
+          receiverId: userId,
+          contenu:notification
+        });
+      }
+      //Ajouter le notification dans la base
+      notificationService.addNotification({
+        userId: userId,
+        contenu:notification
+      })
+
 }
 
 const supprimer = (id) => {

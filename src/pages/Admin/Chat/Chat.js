@@ -30,7 +30,7 @@ const Chat = () => {
     useEffect(() => {
         if(socket)
         {
-            alert("socket")
+        
             const data = {
                 userId: user.id,
                 userRole: user.role,
@@ -40,7 +40,6 @@ const Chat = () => {
                 console.log('activeUsers :>> ', users);
             })
             socket.on('getMessage', data => {
-
                 console.log("mandray message = "+ data)
                 // Mettre à jour l'état avec le nouveau tableau
                 setMessages(prevState => ({
@@ -63,19 +62,9 @@ const Chat = () => {
 
                 alert(notification)
         })
-
-
-          // Fonction de nettoyage
-          return () => {
-            // Déconnecter le socket
-            socket.emit('disconnect', user.id);
-            socket.off(); // Supprimer tous les écouteurs d'événements
-          };
-
         }
-
 		
-	}, [])
+	}, [socket])
 
 	
 
@@ -147,10 +136,19 @@ const Chat = () => {
     }
 
 
-    const cloturer = (id) => {
+    const cloturer = (id, ticketTitre, receiverId) => {
+
+        const notification ="Votre ticket sur "+ ticketTitre+ " est resolu"
+        if (socket) {
+          socket.emit('sendNotification', {
+            receiverId: receiverId,
+            contenu:notification
+          });
+        }
+
         statuService.cloturer(id)
         .then(res => {
-            alert('Le ticket resolu')
+            alert('Le ticket est resolu')
             window.location.reload();
     
         })
@@ -158,6 +156,42 @@ const Chat = () => {
     }
 
 
+    const action = (statu_user_ticket, ticketTitre, receiverId) => {   
+
+        const updatedState = {
+            messages: messages.messages,
+            contenu: {
+              ...messages.contenu,
+              statuId : messages.contenu.statu_user_ticket === statu_user_ticket &&
+                                  messages.contenu.statuId === 5 ? 7 : 5,
+            },
+            conversationId: messages.conversationId,
+            receiverId: messages.receiverId
+        
+          };
+          
+          let notification=""
+          if(updatedState.contenu.statuId === 7){
+            notification ="Votre ticket sur "+ ticketTitre+ " est en attente"
+            statuService.enAttente(statu_user_ticket)
+
+          }else{
+            notification ="Votre ticket sur "+ ticketTitre+ " est en cours"
+            statuService.enCours(statu_user_ticket)
+
+          }
+          setMessages(updatedState);
+
+          if (socket) {
+            socket.emit('sendNotification', {
+              receiverId: receiverId,
+              contenu:notification
+            });
+          }
+
+    }
+
+    
     
     return (
         <div className='w-screen flex'>
@@ -188,7 +222,7 @@ const Chat = () => {
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
-                                                    <h3 className='text-lg font-semibold'> {receiverNom} </h3>
+                                                    <h3 className='text-lg font-semibold'> {receiverNom}</h3>
                                                     <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>
@@ -218,7 +252,17 @@ const Chat = () => {
                     </div>
                     <div className="flex items-center">
                       <div className="ml-auto">
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold h-10 w-16 rounded" onClick={() => cloturer(messages.contenu.statu_user_ticket)}>Resolu</button>
+                      <button
+                        onClick={() => action(messages.contenu.statu_user_ticket, 
+                                              messages.contenu.ticketTitre,
+                                              messages.receiverId)}
+                        className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-10" // Ajoutez les classes de dimensionnement ici
+                        >
+                        {statuService.getAction(messages.contenu.statuId)}
+                        </button>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold h-10 w-16 rounded" onClick={() => cloturer(messages.contenu.statu_user_ticket, 
+                                                                                                                                           messages.contenu.ticketTitre,
+                                                                                                                                           messages.receiverId)}>Resolu</button>
                       </div>
                     </div>
                   </div>

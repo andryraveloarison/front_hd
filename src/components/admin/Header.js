@@ -16,28 +16,28 @@ const Header = () => {
 
 
 
-    //Socket
-    const [socket, setSocket] = useState(null)
+    // //Socket
+    // const [socket, setSocket] = useState(null)
 
-    useEffect(() => {
-		setSocket(io('http://localhost:8080'))
-	}, [])
+    // useEffect(() => {
+	// 	setSocket(io('http://localhost:8080'))
+	// }, [])
 
 
-    useEffect(() => {
-        if(socket)
-        {
-            const data = {
-                userId: user.id,
-                userRole: user.role,
-            }
-            socket.emit('addUser', {data});
-            socket.on('getNotification', notification => {        
-                    alert(notification)
-            })
-        }
+    // useEffect(() => {
+    //     if(socket)
+    //     {
+    //         const data = {
+    //             userId: user.id,
+    //             userRole: user.role,
+    //         }
+    //         socket.emit('addUser', {data});
+    //         socket.on('getNotification', notification => {        
+    //                 alert(notification)
+    //         })
+    //     }
 		
-	}, [socket])
+	// }, [socket])
 
     const logout = (e) => {
         

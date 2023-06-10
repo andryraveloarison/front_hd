@@ -18,11 +18,10 @@ const ClientRouter = () => {
             <Route path="/service" element={<Service/>}/>
             <Route path="/contact" element={<Contact/>}/>
             <Route path="/ticket" element={<Ticket/>}/>
-            <Route path="/chat" element={<Chat/>}/>
             <Route path="*" element={<Error/>}/>
 
           </Route>
-
+          <Route path="/chat" element={<Chat/>}/>
         </Routes>
         </div>
     );

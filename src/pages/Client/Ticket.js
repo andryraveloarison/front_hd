@@ -32,15 +32,6 @@ const Ticket = () => {
     setSocket(io('http://localhost:8080'));
   }, []);
 
-  useEffect(() => {
-    if (socket) {
-      const data = {
-        userId: user.id,
-        userRole: user.role,
-      };
-      socket.emit('addUser', { data });
-    }
-  }, [socket]);
 
   const onChange = (e) => {
     setNewTickets({
@@ -65,7 +56,8 @@ const Ticket = () => {
         contenu:notification
       });
     }
-
+    
+    //Ajouter le notification dans la base
     notificationService.addNotification({
       userId:1,
       contenu:notification
