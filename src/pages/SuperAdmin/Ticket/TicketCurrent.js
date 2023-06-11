@@ -38,9 +38,6 @@ const TicketCurrent = () => {
     }, []);
 
 
-
-
-
   if (isLoading || Loading) {
     return <div>Loading...</div>;
   } else {
@@ -71,6 +68,7 @@ const TicketCurrent = () => {
         {
           adminNom=userAdmin.adminNom
         }
+        return -1
     })
   
 

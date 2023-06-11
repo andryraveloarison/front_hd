@@ -72,7 +72,7 @@ const Header = () => {
             socket.emit('disconnecte', user.id);
         }
         accountService.logout()
-        navigate('/')
+        window.location.href = '/';
     }
     
 

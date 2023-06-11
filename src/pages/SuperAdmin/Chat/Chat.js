@@ -19,6 +19,10 @@ const Chat = () => {
 
     const [message,setMessage] = useState()
 
+    const [load, setLoad] = useState(false)
+    const [conversations,setConversations] = useState([])
+
+
     //Socket
     const [socket, setSocket] = useState(null)
 
@@ -68,12 +72,21 @@ const Chat = () => {
 
 	
 
-    const { isLoading, isError, data: conversations, error } = useQuery(
+    const { isLoading, isError, data: dataConversations, error } = useQuery(
         'conversations',
         () => conversationService.getConversation(user.id).then((res) => res.data.conversation)
       );
     
-      if (isLoading) return <div>Loading...</div>;
+      if (isLoading){
+        return <div>Loading...</div>;
+      } else {
+        if(load === false)
+        {
+          setConversations(dataConversations)
+          setLoad(true)
+        }
+        
+      } 
       if (isError) return <div>{error.message}</div>;
 
 
@@ -107,11 +120,7 @@ const Chat = () => {
         fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket);
     }
 
-    
-    
-    
 
-    
     const sendMessage =(e) =>{
         e.preventDefault()
         const newMessage ={
@@ -164,7 +173,7 @@ const Chat = () => {
     }
 
 
-    const action = (statu_user_ticket, ticketTitre, receiverId) => {   
+    const action = (statu_user_ticket, ticketTitre, receiverId, conversationId) => {   
 
         const updatedState = {
             messages: messages.messages,
@@ -179,16 +188,33 @@ const Chat = () => {
           };
           
           let notification=""
+          let statuChanged=0
           if(updatedState.contenu.statuId === 7){
             notification ="Votre ticket sur "+ ticketTitre+ " est en attente"
+            statuChanged=7
             statuService.enAttente(statu_user_ticket)
 
           }else{
             notification ="Votre ticket sur "+ ticketTitre+ " est en cours"
+            statuChanged=5
             statuService.enCours(statu_user_ticket)
 
           }
           setMessages(updatedState);
+
+          // Modification du conversation
+
+        const updatedConversations = conversations.map(conversation => {
+            if (conversation.conversationId === conversationId) {
+                return {
+                ...conversation,
+                statuId: statuChanged
+                };
+            }
+            return conversation;
+            });
+
+        setConversations(updatedConversations);
 
           const dataNotif = {
             receiverId: receiverId,
@@ -271,7 +297,8 @@ const Chat = () => {
                       <button
                         onClick={() => action(messages.contenu.statu_user_ticket, 
                                               messages.contenu.ticketTitre,
-                                              messages.receiverId)}
+                                              messages.receiverId,
+                                              messages.conversationId)}
                         className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-10" // Ajoutez les classes de dimensionnement ici
                         >
                         {statuService.getAction(messages.contenu.statuId)}

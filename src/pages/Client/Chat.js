@@ -18,6 +18,9 @@ const Chat = () => {
 
     const [message,setMessage] = useState()
 
+    const [load, setLoad] = useState(false)
+    const [conversations,setConversations] = useState([])
+
     // Socket
     const [socket, setSocket] = useState(null)
 
@@ -58,12 +61,20 @@ const Chat = () => {
 
 
 
-    const { isLoading, isError, data: conversations, error } = useQuery(
+    const { isLoading, isError, data: dataConversations, error } = useQuery(
         'conversations',
         () => conversationService.getConversation(user.id).then((res) => res.data.conversation)
       );
     
-      if (isLoading) return <div>Loading...</div>;
+      if (isLoading){
+        return <div>Loading...</div>;
+      } else {
+        if(load === false)
+        {
+          setConversations(dataConversations)
+          setLoad(true)
+        }
+    }
       if (isError) return <div>{error.message}</div>;
 
     const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId) => {
