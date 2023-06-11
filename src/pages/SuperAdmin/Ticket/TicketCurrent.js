@@ -20,6 +20,7 @@ const TicketCurrent = () => {
   const [ListTickets,setListeTickets] = useState([])
   const [adminActive, setAdminActive] = useState({})
 
+
   const { Loading, Error, data: userAdmins = [],error } = useQuery('userAdmins', () =>
   userService.getUserAdmin().then((res) => res.data.userAdmin)
 );
@@ -56,21 +57,24 @@ const TicketCurrent = () => {
   
   
   
-  const action = (statu_user_ticket, ticketId, userId) => {   
+  const action = (statu_user_ticket, ticketId, userId, userNom) => {
 
     let adminId = adminActive[ticketId];
     if(!adminId){
       adminId = userConnected.id
     }
-    console.log('statu_user_ticket:', statu_user_ticket);
-    console.log('userId:', userId);
-    console.log('id:', ticketId);
 
-    const updatedTicket = ListTickets.map((ticket) => {
+    //prendre le nom de l'administrateur
+    let adminNom=""
+    userAdmins.map((userAdmin) => {
+        if(adminId === userAdmin.adminId )
+        {
+          adminNom=userAdmin.adminNom
+        }
+    })
+  
 
-      console.log(userAdmins)
-
-
+    const updatedTicket = currentPageTickets.map((ticket) => {
 
         if (ticket.statu_user_ticket === statu_user_ticket) {
           // Modifier l'élément avec l'ID spécifique 
@@ -99,10 +103,10 @@ const TicketCurrent = () => {
 
               if(adminId === userConnected.id)
               {
-                alert('Une conversation a ete cree vous et user')
+                alert('Une conversation a ete cree entre vous et '+ userNom)
                 navigate('/superAdmin/chat/index')
               }else{
-                alert('Une conversation a ete cree entre Admin et user')
+                alert('Une conversation a ete cree entre '+ adminNom +' et '+ userNom)
                 window.location.reload();
               }
  
@@ -129,7 +133,7 @@ const TicketCurrent = () => {
       setListeTickets(updatedTicket);
 
       //NOTIFICATION
-      const notification =" Votre ticket est en cours, vous avez une discussion avec "+ adminId
+      const notification =" Votre ticket est en cours, vous avez une discussion avec "+ adminNom
       if (socket) {
         socket.emit('sendNotification', {
           receiverId: userId,
@@ -230,7 +234,7 @@ return (
             <td className="text-center">
               {ticket.adminNom === "none" && (
                 <button
-                  onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId)}
+                  onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId, ticket.userNom)}
                   className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
                 >
                   {statuService.getAction(ticket.statuId)}

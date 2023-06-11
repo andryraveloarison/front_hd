@@ -49,7 +49,7 @@ const Ticket = () => {
       userId: user.id,
     });
 
-    const notification =""+user.nom+" a creer un nouveau ticket"
+    const notification =user.nom+" a creer un nouveau ticket"
     if (socket) {
       socket.emit('sendNotification', {
         receiverId: 1,

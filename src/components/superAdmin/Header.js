@@ -14,7 +14,6 @@ const Header = () => {
     const user = useSelector(selectUser)
     const [nbNotif,setnbNotif] = useState(0)
     const [notification, setNotification] = useState([])
-    const nbNotifRef = useRef(nbNotif);
 
     useEffect(()=>{
         notificationService.get_nbNotif_NonLu(user.id).then((res) =>
@@ -27,7 +26,6 @@ const Header = () => {
     const toggleNotificationList = () => {
           setShowNotifications(!showNotifications);
           setnbNotif(0)
-          nbNotifRef.current = 0
           notificationService.set_notification_Lu(user.id)
         };
 
@@ -60,8 +58,7 @@ const Header = () => {
                           date: date,}
 
                         ]);
-                    nbNotifRef.current += 1;
-                    setnbNotif(nbNotifRef.current);
+                    setnbNotif(prevNbNotif => prevNbNotif + 1);
             })
         }
 		
@@ -99,8 +96,6 @@ const Header = () => {
                     </ul>
                 </div>
                 )}
-            
-            
            
 
             <button onClick={(e) => logout(e)}className="bg-red-500 text-white font-bold  px-4 rounded">

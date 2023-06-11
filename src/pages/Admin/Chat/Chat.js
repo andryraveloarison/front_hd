@@ -1,6 +1,6 @@
 import Avatar from '@/assets/avatar.svg'
 import Input from '@/components/Input';
-import { messageService, conversationService, statuService } from '@/_services';
+import { messageService, conversationService, statuService, notificationService } from '@/_services';
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
@@ -60,7 +60,7 @@ const Chat = () => {
                     theme: "light",
                     });
 
-                alert(notification)
+                alert(notification.contenu)
         })
         }
 		
@@ -139,12 +139,20 @@ const Chat = () => {
     const cloturer = (id, ticketTitre, receiverId) => {
 
         const notification ="Votre ticket sur "+ ticketTitre+ " est resolu"
-        if (socket) {
-          socket.emit('sendNotification', {
+        const dataNotif = {
             receiverId: receiverId,
             contenu:notification
-          });
-        }
+          }
+          if (socket) {
+            socket.emit('sendNotification', dataNotif);
+            }
+
+            //Ajouter le notification dans la base
+            notificationService.addNotification({
+                userId: receiverId,
+                contenu: notification
+            })
+               
 
         statuService.cloturer(id)
         .then(res => {
@@ -182,12 +190,20 @@ const Chat = () => {
           }
           setMessages(updatedState);
 
-          if (socket) {
-            socket.emit('sendNotification', {
-              receiverId: receiverId,
-              contenu:notification
-            });
+          const dataNotif = {
+            receiverId: receiverId,
+            contenu:notification
           }
+          if (socket) {
+            socket.emit('sendNotification', dataNotif);
+            }
+
+           //Ajouter le notification dans la base
+            notificationService.addNotification({
+                userId: receiverId,
+                contenu: notification
+            })
+               
 
     }
 

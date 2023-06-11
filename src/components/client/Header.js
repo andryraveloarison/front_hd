@@ -1,37 +1,3 @@
-// import React from 'react';
-
-// import { useNavigate } from 'react-router-dom';
-// import { accountService } from '@/_services/account.service';
-
-// import './header.css'
-
-// const Header = () => {
-
-//     let navigate = useNavigate()
-
-//     const logout = () => {
-//         accountService.logout()
-//         navigate('/')
-//     }
-
-//     return (
-//             <header className="pheader">
-//                 <nav>
-//                     <ul>
-//                         <li><Link to="home">Accueil</Link></li>
-//                         <li><Link to="ticket">Ticket</Link></li>
-//                         <li><Link to="chat">Discussion</Link></li>
-//                         <button onClick={logout}>Logout</button>
-
-//                     </ul>
-//                 </nav>
-//             </header>
-//     );
-// };
-
-// export default Header;
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { accountService } from '@/_services/account.service';
@@ -49,7 +15,6 @@ const Header = () => {
     const user = useSelector(selectUser)
     const [nbNotif,setnbNotif] = useState(0)
     const [notification, setNotification] = useState([])
-    const nbNotifRef = useRef(nbNotif);
 
     useEffect(()=>{
         notificationService.get_nbNotif_NonLu(user.id).then((res) =>
@@ -62,7 +27,6 @@ const Header = () => {
     const toggleNotificationList = () => {
           setShowNotifications(!showNotifications);
           setnbNotif(0)
-          nbNotifRef.current = 0
           notificationService.set_notification_Lu(user.id)
         };
 
@@ -84,6 +48,7 @@ const Header = () => {
                 userRole: user.role,
             }
             socket.emit('addUser', {data});
+            
             socket.on('getNotification', newNotification => {        
                     alert(newNotification.contenu)
                     var today = new Date(),
@@ -95,8 +60,8 @@ const Header = () => {
                           date: date,}
 
                         ]);
-                    nbNotifRef.current += 1;
-                    setnbNotif(nbNotifRef.current);
+                        setnbNotif(prevNbNotif => prevNbNotif + 1);
+
             })
         }
 		
