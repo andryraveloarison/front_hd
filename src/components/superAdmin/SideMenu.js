@@ -28,7 +28,7 @@ const SideMenu = () => {
     <div className="flex">
       <div
         className={`${
-          open ? "w-72" : "w-20 "
+          open ? "w-65" : "w-20 "
         } bg-primary h-screen p-5  pt-8 relative duration-300`}
       >
         <img

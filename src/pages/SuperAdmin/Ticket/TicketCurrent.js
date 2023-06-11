@@ -114,7 +114,6 @@ const TicketCurrent = () => {
           .catch(err => console.log(err))
           
             }
-            
 
             return {                    
                 ...ticket,
@@ -123,8 +122,6 @@ const TicketCurrent = () => {
               };
 
           }
-
-         
         }
         return ticket;
       });

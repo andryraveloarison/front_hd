@@ -68,7 +68,9 @@ const Header = () => {
 	}, [socket])
 
     const logout = (e) => {
-        
+        if(socket){
+            socket.emit('disconnecte', user.id);
+        }
         accountService.logout()
         navigate('/')
     }
