@@ -41,10 +41,9 @@ const Chat = () => {
             }
             socket.emit('addUser', {data});
             socket.on('getUsers', users => {
-                console.log('activeUsers :>> ', users);
             })
             socket.on('getMessage', data => {
-                console.log("mandray message = "+ data)
+                
                 // Mettre à jour l'état avec le nouveau tableau
                 setMessages(prevState => ({
                 ...prevState, // Copie du state existant
@@ -189,6 +188,7 @@ const Chat = () => {
           
           let notification=""
           let statuChanged=0
+
           if(updatedState.contenu.statuId === 7){
             notification ="Votre ticket sur "+ ticketTitre+ " est en attente"
             statuChanged=7
@@ -218,7 +218,8 @@ const Chat = () => {
 
           const dataNotif = {
             receiverId: receiverId,
-            contenu:notification
+            contenu:notification,
+            
           }
           if (socket) {
             socket.emit('sendNotification', dataNotif);
@@ -264,7 +265,7 @@ const Chat = () => {
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
-                                                    <h3 className='text-lg font-semibold'> {receiverNom}</h3>
+                                                    <h3 className='text-lg font-semibold'> {receiverNom} , conversationId = {conversationId}</h3>
                                                     <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>

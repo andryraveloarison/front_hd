@@ -16,6 +16,9 @@ const UserGuard = ({children}) => {
     if(user.role===1){
         return  <Navigate to="/admin"/>
     }
+    if(user.role ===3){
+        return <Navigate to="/superAdmin"/>
+    }
     if(user.role === 2)
     {
         return children

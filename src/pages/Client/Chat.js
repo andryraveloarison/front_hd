@@ -160,7 +160,7 @@ const Chat = () => {
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
-                                                    <h3 className='text-lg font-semibold'> {receiverNom} </h3>
+                                                    <h3 className='text-lg font-semibold'> {receiverNom}  , conversationId = {conversationId} </h3>
                                                     <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>

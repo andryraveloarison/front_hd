@@ -27,7 +27,9 @@ const NotAuthGuard = ({children}) => {
         if(role === 1){
             return <Navigate to="/admin/"/>
         }
-
+        if(role ===3){
+            return <Navigate to="/superAdmin"/>
+        }
         
     } else{
         return children
