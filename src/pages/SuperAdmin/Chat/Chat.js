@@ -4,7 +4,7 @@ import { messageService, conversationService, statuService, notificationService 
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client'
 import { toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,6 +16,12 @@ const Chat = () => {
         messages:[],
         contenu:{}
         })
+
+    const messagesRef = useRef(messages);
+
+    useEffect(() => {
+          messagesRef.current = messages;
+        }, [messages]);
 
     const [message,setMessage] = useState()
 
@@ -31,6 +37,7 @@ const Chat = () => {
 	}, [])
 
 
+   
     useEffect(() => {
         if(socket)
         {
@@ -43,13 +50,20 @@ const Chat = () => {
             socket.on('getUsers', users => {
             })
             socket.on('getMessage', data => {
-                
-                // Mettre à jour l'état avec le nouveau tableau
-                setMessages(prevState => ({
-                ...prevState, // Copie du state existant
-                messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
-                }));
-           
+
+                if(messagesRef.current.conversationId === data.conversationId){
+
+                    if(user.id === data.receiverId || user.id === data.senderId )
+                    {
+                        
+                        // Mettre à jour l'état avec le nouveau tableau
+                        setMessages(prevState => ({
+                            ...prevState, // Copie du state existant
+                            messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
+                            }));
+                    }
+                    
+                }
             })
             socket.on('getNotification', notification => {        
                 toast(notification, {
@@ -68,7 +82,6 @@ const Chat = () => {
         }
 		
 	}, [socket])
-
 	
 
     const { isLoading, isError, data: dataConversations, error } = useQuery(
@@ -109,9 +122,6 @@ const Chat = () => {
         })
         .catch(err => console.log(err))
     }
-
-
-
 
     if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
         const lastConversation = conversations.slice(0, 1)[0]; // Obtenir le dernier élément de conversations
@@ -219,6 +229,7 @@ const Chat = () => {
           const dataNotif = {
             receiverId: receiverId,
             contenu:notification,
+            conversationId: conversationId
             
           }
           if (socket) {
@@ -232,6 +243,7 @@ const Chat = () => {
             })
                
 
+            
     }
 
     
@@ -265,7 +277,7 @@ const Chat = () => {
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
-                                                    <h3 className='text-lg font-semibold'> {receiverNom} , conversationId = {conversationId}</h3>
+                                                    <h3 className='text-lg font-semibold'> {receiverNom} </h3>
                                                     <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>
@@ -290,7 +302,7 @@ const Chat = () => {
                       <img src={Avatar} width={60} height={60}/>
                     </div>
                     <div className="ml-6">
-                      <h3 className='text-lg'> {messages.contenu.receiverNom} </h3>
+                      <h3 className='text-lg'> {messages.contenu.receiverNom} , conversationId = {messages.conversationId} </h3>
                       <p className="text-lg font-light text-gray-600"> {statuService.getStatu(messages.contenu.statuId)}</p>
                     </div>
                     <div className="flex items-center">

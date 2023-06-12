@@ -4,7 +4,7 @@ import { messageService, conversationService, statuService, notificationService 
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client'
 import { toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,6 +16,12 @@ const Chat = () => {
         messages:[],
         contenu:{}
         })
+
+    const messagesRef = useRef(messages);
+
+    useEffect(() => {
+              messagesRef.current = messages;
+            }, [messages]);
 
     const [message,setMessage] = useState()
 
@@ -44,13 +50,20 @@ const Chat = () => {
                 console.log('activeUsers :>> ', users);
             })
             socket.on('getMessage', data => {
-                console.log("mandray message = "+ data)
-                // Mettre à jour l'état avec le nouveau tableau
-                setMessages(prevState => ({
-                ...prevState, // Copie du state existant
-                messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
-                }));
-           
+
+                if(messagesRef.current.conversationId === data.conversationId){
+
+                    if(user.id === data.receiverId || user.id === data.senderId )
+                    {
+                        
+                        // Mettre à jour l'état avec le nouveau tableau
+                        setMessages(prevState => ({
+                            ...prevState, // Copie du state existant
+                            messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
+                            }));
+                    }
+                    
+                }
             })
             socket.on('getNotification', notification => {
                 alert(notification.contenu)
@@ -102,8 +115,6 @@ const Chat = () => {
         })
         .catch(err => console.log(err))
     }
-
-
 
 
     if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
@@ -210,7 +221,8 @@ const Chat = () => {
 
           const dataNotif = {
             receiverId: receiverId,
-            contenu:notification
+            contenu:notification,
+            conversationId: conversationId
           }
           if (socket) {
             socket.emit('sendNotification', dataNotif);

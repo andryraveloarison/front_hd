@@ -4,7 +4,7 @@ import { messageService, conversationService, statuService } from '@/_services';
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client'
 
 const Chat = () => {
@@ -15,6 +15,12 @@ const Chat = () => {
         messages:[],
         contenu:{}
         })
+
+    const messagesRef = useRef(messages);
+
+    useEffect(() => {
+              messagesRef.current = messages;
+            }, [messages]);
 
     const [message,setMessage] = useState()
 
@@ -43,14 +49,20 @@ const Chat = () => {
             })
             socket.on('getMessage', data => {
 
-                if(user.id === data.receiverId || user.id === data.senderId)
-                {
-                    // Mettre à jour l'état avec le nouveau tableau
-                    setMessages(prevState => ({
-                        ...prevState, // Copie du state existant
-                        messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
-                        }));
+                if(messagesRef.current.conversationId === data.conversationId){
+
+                    if(user.id === data.receiverId || user.id === data.senderId )
+                    {
+                        
+                        // Mettre à jour l'état avec le nouveau tableau
+                        setMessages(prevState => ({
+                            ...prevState, // Copie du state existant
+                            messages: [...prevState.messages, data] // Mise à jour du tableau messages.messages
+                            }));
+                    }
+
                 }
+               
            
             })
 
@@ -58,7 +70,27 @@ const Chat = () => {
                 alert(notification.contenu)
                 const updateConversation=conversationService.getConversation(user.id).then((res) => 
                 setConversations(res.data.conversation))
-                
+
+                if(notification.conversationId ){
+                    if(notification.conversationId === messagesRef.current.conversationId)
+                    {
+                        const updatedState = {
+                            messages: messagesRef.current.messages,
+                            contenu: {
+                              ...messagesRef.current.contenu,
+                              statuId : messagesRef.current.contenu.statuId === 5 ? 7 : 5,       
+                            },
+                            conversationId: messagesRef.current.conversationId,
+                            receiverId: messagesRef.current.receiverId
+                        
+                          };
+
+                          setMessages(updatedState);
+
+                    }
+                   
+                }
+
             })
         }
         // eslint-disable-next-line
@@ -160,7 +192,7 @@ const Chat = () => {
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
-                                                    <h3 className='text-lg font-semibold'> {receiverNom}  , conversationId = {conversationId} </h3>
+                                                    <h3 className='text-lg font-semibold'> {receiverNom}  </h3>
                                                     <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>
@@ -183,7 +215,7 @@ const Chat = () => {
                         <img src={Avatar} width={60} height={60}/>
                     </div>
                     <div className="ml-6">
-                        <h3 className='text-lg '> {messages.contenu.receiverNom} </h3>
+                        <h3 className='text-lg '> {messages.contenu.receiverNom} , conversationId = {messages.conversationId} </h3>
                         <p className="text-lg font-light text-gray-600"> {statuService.getStatu(messages.contenu.statuId)}</p>
                     </div>
                 </div>
