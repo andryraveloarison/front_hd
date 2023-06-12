@@ -20,7 +20,6 @@ const TicketCurrent = () => {
   const [ListTickets,setListeTickets] = useState([])
   const [adminActive, setAdminActive] = useState({})
 
-
   const { Loading, Error, data: userAdmins = [],error } = useQuery('userAdmins', () =>
   userService.getUserAdmin().then((res) => res.data.userAdmin)
 );
@@ -54,7 +53,7 @@ const TicketCurrent = () => {
   
   
   
-  const action = (statu_user_ticket, ticketId, userId, userNom) => {
+  const action = (statu_user_ticket, ticketId, userId, userNom , ticketTitre) => {
 
     let adminId = adminActive[ticketId];
     if(!adminId){
@@ -71,6 +70,7 @@ const TicketCurrent = () => {
         return -1
     })
   
+
 
     const updatedTicket = currentPageTickets.map((ticket) => {
 
@@ -96,17 +96,20 @@ const TicketCurrent = () => {
               "ticketId":ticketId
             } 
 
+            
 
             conversationService.addConversation(newconversation).then(res => {
 
               if(adminId === userConnected.id)
               {
                 alert('Une conversation a ete cree entre vous et '+ userNom)
-                navigate('/superAdmin/chat/index')
+                
               }else{
                 alert('Une conversation a ete cree entre '+ adminNom +' et '+ userNom)
-                window.location.reload();
               }
+              
+              sendNotification(userId,adminNom, ticketTitre)
+
  
             })
           .catch(err => console.log(err))
@@ -125,28 +128,55 @@ const TicketCurrent = () => {
       });
 
       
-      setListeTickets(updatedTicket);
-
-      //NOTIFICATION
-      const notification =" Votre ticket est en cours, vous avez une discussion avec "+ adminNom
-      if (socket) {
-        socket.emit('sendNotification', {
-          receiverId: userId,
-          contenu:notification
-        });
-      }
-      //Ajouter le notification dans la base
-      notificationService.addNotification({
-        userId: userId,
-        contenu:notification
-      })
+      setListeTickets(updatedTicket);     
+     
 
 }
 
-const supprimer = (id) => {
+const sendNotification= (userId,adminNom, ticketTitre ) =>{
+
+    //NOTIFICATION
+    const notification =" Votre ticket sur " + ticketTitre + " est en cours, vous avez une discussion avec "+ adminNom
+    if (socket) {
+      socket.emit('sendNotification', {
+        receiverId: userId,
+        contenu:notification
+      });
+    }
+    //Ajouter le notification dans la base
+    notificationService.addNotification({
+      userId: userId,
+      contenu:notification
+    })
+
+    if(adminNom === userConnected.nom){
+      window.location.href = '/superAdmin/chat/index';
+    }else{
+      window.location.reload();
+    }
+}
+
+
+const supprimer = (id, userId, ticketTitre) => {
     statuService.supprimer(id)
     .then(res => {
         alert('un ticket supprimer')
+
+        let notification = "Votre ticket sur "+ ticketTitre + " est supprimer"
+        //notification du supprimer
+        if (socket) {
+          socket.emit('sendNotification', {
+            receiverId: userId,
+            contenu: notification
+          });
+        }
+
+        //Ajouter le notification dans la base
+        notificationService.addNotification({
+          userId: userId,
+          contenu:notification
+        })
+
         window.location.reload();
     })
     .catch(err => console.log(err))
@@ -174,6 +204,7 @@ const pageCount = Math.ceil(tickets.length / pageSize);
     setCurrentPage(data.selected);
   };
 
+  
 return (
   <div className="User bg-gray-100 p-4 h-full">
   <h1 className="text-2xl font-bold mb-4">Liste des tickets en cours</h1>
@@ -229,14 +260,14 @@ return (
             <td className="text-center">
               {ticket.adminNom === "none" && (
                 <button
-                  onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId, ticket.userNom)}
+                  onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId, ticket.userNom, ticket.titre)}
                   className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
                 >
                   {statuService.getAction(ticket.statuId)}
                 </button>
               )}
               <button
-                onClick={() => supprimer(ticket.statu_user_ticket)}
+                onClick={() => supprimer(ticket.statu_user_ticket, ticket.userId, ticket.titre)}
                 className="bg-red-500 text-white font-bold rounded w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
                 data-te-ripple-init
               >

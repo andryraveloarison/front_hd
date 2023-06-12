@@ -45,7 +45,6 @@ const Chat = () => {
 
                 if(user.id === data.receiverId || user.id === data.senderId)
                 {
-                    alert("add emessage")
                     // Mettre à jour l'état avec le nouveau tableau
                     setMessages(prevState => ({
                         ...prevState, // Copie du state existant
@@ -53,6 +52,14 @@ const Chat = () => {
                         }));
                 }
            
+            })
+
+            socket.on('getNotification', notification => {
+                alert(notification.contenu)
+                const updateConversation=conversationService.getConversation(user.id).then((res) => 
+                setConversations(res.data.conversation))
+
+                
             })
         }
         // eslint-disable-next-line

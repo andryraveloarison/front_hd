@@ -75,7 +75,10 @@ const Header = () => {
         window.location.href = '/';
     }
     
+    const navigateChat = (e) => {
+        window.location.href = '/user/chat';
 
+    }
     return (
 
         <div className='CHeader flex items-end'>
@@ -83,7 +86,7 @@ const Header = () => {
                 <ul className='list-none flex'>
                     <li className='px-10'><Link to="home">Accueil</Link></li>
                     <li className='px-10'><Link to="ticket">Ticket</Link></li>
-                    <li className='px-10'><Link to="chat">Discussion</Link></li>
+                    <li className='px-10'><button onClick={(e) => navigateChat(e)} >Discussion</button></li>
                 </ul>
             
             </div>
