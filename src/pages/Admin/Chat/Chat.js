@@ -52,20 +52,12 @@ const Chat = () => {
                 }));
            
             })
-            socket.on('getNotification', notification => {        
-                toast(notification, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    });
-
+            socket.on('getNotification', notification => {
                 alert(notification.contenu)
-        })
+                const updateConversation=conversationService.getConversation(user.id).then((res) => 
+                setConversations(res.data.conversation))
+                
+            })
         }
 		
 	}, [socket])

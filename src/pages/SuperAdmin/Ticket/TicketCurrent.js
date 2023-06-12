@@ -102,13 +102,13 @@ const TicketCurrent = () => {
 
               if(adminId === userConnected.id)
               {
-                alert('Une conversation a ete cree entre vous et '+ userNom)
+                //alert('Une conversation a ete cree entre vous et '+ userNom)
                 
               }else{
                 alert('Une conversation a ete cree entre '+ adminNom +' et '+ userNom)
               }
               
-              sendNotification(userId,adminNom, ticketTitre)
+              sendNotification(userId,adminNom, ticketTitre, adminId, userNom)
 
  
             })
@@ -133,27 +133,30 @@ const TicketCurrent = () => {
 
 }
 
-const sendNotification= (userId,adminNom, ticketTitre ) =>{
+const sendNotification= (userId,adminNom, ticketTitre,  adminId, userNom) =>{
 
-    //NOTIFICATION
-    const notification =" Votre ticket sur " + ticketTitre + " est en cours, vous avez une discussion avec "+ adminNom
-    if (socket) {
-      socket.emit('sendNotification', {
-        receiverId: userId,
+    const sendNotif = (userId, notification) => {
+      if (socket) {
+        socket.emit('sendNotification', {
+          receiverId: userId,
+          contenu:notification
+        });
+      }
+      //Ajouter le notification dans la base
+      notificationService.addNotification({
+        userId: userId,
         contenu:notification
-      });
+      }).then(() => {
+        userId === userConnected.id ? (window.location.href = '/superAdmin/chat/index'):
+        (window.location.reload())
+      })
     }
-    //Ajouter le notification dans la base
-    notificationService.addNotification({
-      userId: userId,
-      contenu:notification
-    })
+    //NOTIFICATION
+    const notificationUser =" Votre ticket sur " + ticketTitre + " est en cours, vous avez une discussion avec "+ adminNom
+    const notificationAdmin = "Vous avez une nouvelle discussion avec " + userNom
 
-    if(adminNom === userConnected.nom){
-      window.location.href = '/superAdmin/chat/index';
-    }else{
-      window.location.reload();
-    }
+    sendNotif(userId, notificationUser)
+    sendNotif(adminId, notificationAdmin)
 }
 
 
@@ -175,9 +178,8 @@ const supprimer = (id, userId, ticketTitre) => {
         notificationService.addNotification({
           userId: userId,
           contenu:notification
-        })
+        }).then(res => window.location.reload())
 
-        window.location.reload();
     })
     .catch(err => console.log(err))
 }

@@ -58,7 +58,6 @@ const Chat = () => {
                 alert(notification.contenu)
                 const updateConversation=conversationService.getConversation(user.id).then((res) => 
                 setConversations(res.data.conversation))
-
                 
             })
         }
