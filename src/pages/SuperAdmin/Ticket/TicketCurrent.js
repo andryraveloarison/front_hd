@@ -53,11 +53,11 @@ const TicketCurrent = () => {
   
   
   
-  const action = (statu_user_ticket, ticketId, userId, userNom , ticketTitre) => {
+  const action = (statu_user_ticket, ticketId, userId, userNom , ticketTitre, propAdminId) => {
 
     let adminId = adminActive[ticketId];
     if(!adminId){
-      adminId = userConnected.id
+      adminId = propAdminId
     }
 
     //prendre le nom de l'administrateur
@@ -243,26 +243,37 @@ return (
             <td className="px-4 py-2  text-center">{ticket.createdAt}</td>
             <td className="px-4 py-2  text-center">{statuService.getStatu(ticket.statuId)}</td>
             <td className="px-4 py-2  text-center">
-              {ticket.adminNom === "none" ? (
-                <select name="userAdmin" id="userAdmin">
-                  {userAdmins.map(userAdmin => (
-                    <option
-                      key={userAdmin.id}
-                      value={userAdmin.id}
-                      onClick={() => selectAdmin(userAdmin.adminId, ticket.id)}
-                    >
-                      {userAdmin.adminNom}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <span>{ticket.adminNom}</span>
-              )}
+              {
+                ticket.adminNom === "none" ? (
+                  <select name="userAdmin" id="userAdmin">
+                    {
+                      // trier et mettre la proposition Admin en premier
+                      [...userAdmins].sort((a, b) => {
+                        if (a.adminId === ticket.propAdminId) return -1;
+                        if (b.adminId === ticket.propAdminId) return 1;
+                        return 0;
+
+                      }).map(userAdmin => (
+                        <option
+                          key={userAdmin.id}
+                          value={userAdmin.id}
+                          onClick={() => selectAdmin(userAdmin.adminId, ticket.id)}
+                        >
+                          {userAdmin.adminNom}
+                        </option>
+                      ))
+                    }
+                  </select>
+                ) : (
+                  <span>{ticket.adminNom}</span>
+                )
+              }
             </td>
+
             <td className="text-center">
               {ticket.adminNom === "none" && (
                 <button
-                  onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId, ticket.userNom, ticket.titre)}
+                  onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId, ticket.userNom, ticket.titre , ticket.propAdminId)}
                   className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
                 >
                   {statuService.getAction(ticket.statuId)}
