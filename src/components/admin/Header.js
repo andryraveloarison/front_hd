@@ -76,7 +76,7 @@ const Header = () => {
     }
     
     const navigateChat = (e) => {
-        window.location.href = '/admin/chat';
+        window.location.href = '/admin/chat/index';
 
     }
     return (

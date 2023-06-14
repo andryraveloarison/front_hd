@@ -2,18 +2,33 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { userService } from '@/_services';
 import { useQuery } from 'react-query';
+import { roleService } from '@/_services';
 
 
 const User = () => {
 
     const { isLoading, isError, data: users = [], error } = useQuery(
         'users',
-        () => userService.getAllUsers().then ((res)=> res.data.user)
+        () => userService.getAllUsers().then ((res)=> res.data.users)
       );
 
 
       if (isLoading) return <div>Loading...</div>;
       if (isError) return <div>{error.message}</div>;
+
+
+    const action = (statuRoleId, roleId) => {
+        if(roleId === 2){
+            roleService.setAdmin(statuRoleId).then(res => {
+                window.location.reload();        
+            })
+            
+        }else(
+            roleService.setUser(statuRoleId).then(res => {
+                window.location.reload();        
+            })
+        )
+    }
 
     return (
         <div className="User bg-gray p-4 h-full">
@@ -31,6 +46,9 @@ const User = () => {
                                 <th className="px-4 py-2">
                                     email
                                 </th>
+                                <th className="px-4 py-2">
+                                    role
+                                </th>
                                 <th scope="col" className="px-4 py-2">
                                     <span className="sr-only">Edit</span>
                                 </th>
@@ -47,7 +65,16 @@ const User = () => {
                                             <td className="px-4 py-2 text-center"
                                             >{user.email}</td>
                                             <td className="px-4 py-2 text-center"
-                                            ><Link to={`/superAdmin/user/edit/${user.id}`}>Edit</Link></td>
+                                            >{roleService.getRole(user.userRole)}</td>
+                                            <td className="px-4 py-2 text-center"
+                                            >
+                                            <button
+                                                onClick={() => action(user.statuRoleId, user.userRole)}
+                                                className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
+                                                >
+                                                {roleService.getAction(user.userRole)} 
+                                            </button>
+                                            </td>
 
                                         </tr>
                                     ))

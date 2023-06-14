@@ -12,7 +12,6 @@ const ALayout = () => {
         <div className="Alayout"> 
             <Header/> 
             <div id="admin">
-                <SideMenu/>
                 <div id ="admin_body"><Outlet/></div>
             </div>
             
