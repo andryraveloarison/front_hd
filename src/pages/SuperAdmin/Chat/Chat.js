@@ -182,6 +182,35 @@ const Chat = () => {
     }
 
 
+    const nonCloturer = (id, ticketTitre, receiverId) => {
+
+        const notification ="Votre ticket sur "+ ticketTitre+ " est n'est pas resolu"
+        const dataNotif = {
+            receiverId: receiverId,
+            contenu:notification
+          }
+          if (socket) {
+            socket.emit('sendNotification', dataNotif);
+            }
+
+            //Ajouter le notification dans la base
+            notificationService.addNotification({
+                userId: receiverId,
+                contenu: notification
+            })
+               
+
+        statuService.nonCloturer(id)
+        .then(res => {
+            alert('Le ticket est n\'est pas resolu')
+            window.location.reload();
+    
+        })
+        .catch(err => console.log(err))
+    }
+
+
+
     const action = (statu_user_ticket, ticketTitre, receiverId, conversationId) => {   
 
         const updatedState = {
@@ -302,7 +331,7 @@ const Chat = () => {
                       <img src={Avatar} width={60} height={60}/>
                     </div>
                     <div className="ml-6">
-                      <h3 className='text-lg'> {messages.contenu.receiverNom} , conversationId = {messages.conversationId} </h3>
+                      <h3 className='text-lg'> {messages.contenu.receiverNom} </h3>
                       <p className="text-lg font-light text-gray-600"> {statuService.getStatu(messages.contenu.statuId)}</p>
                     </div>
                     <div className="flex items-center">
@@ -319,7 +348,10 @@ const Chat = () => {
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold h-10 w-16 rounded" onClick={() => cloturer(messages.contenu.statu_user_ticket, 
                                                                                                                                            messages.contenu.ticketTitre,
                                                                                                                                            messages.receiverId)}>Resolu</button>
-                      </div>
+                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold h-10 w-16 rounded" onClick={() => nonCloturer(messages.contenu.statu_user_ticket, 
+                                                                                                                                            messages.contenu.ticketTitre,
+                                                                                                                                            messages.receiverId)}>NonResolu</button>                     
+                        </div>
                     </div>
                   </div>
                   

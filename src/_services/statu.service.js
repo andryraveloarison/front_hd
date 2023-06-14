@@ -9,6 +9,10 @@ const statu = [
     "en cours", //5
     "resolu",   //6
     "en attente",//7
+    "lu",        //8
+    "non lu",    //9
+    "non resolu" //10
+
 
 ]
 
@@ -18,6 +22,9 @@ const action = [
     "resoudre", //6
     "resoudre", //7
     "resolu",   //8
+    "resoudre",   //8
+    "resoudre",   //8
+
 ]
 
 
@@ -33,19 +40,23 @@ let getAction = (id) => {
 
 
 let supprimer = (id) => {
-    return Axios.get('/statu/supprimer/'+id)
+    return Axios.patch('/statu/supprimer/'+id)
 }
 
 let cloturer = (id) => {
-    return Axios.get('/statu/cloturer/'+id)
+    return Axios.patch('/statu/cloturer/'+id)
+}
+
+let nonCloturer = (id) => {
+    return Axios.patch('/statu/nonCloturer/'+id)
 }
 
 let enAttente = (id) => {
-    return Axios.get('/statu/enAttente/'+id)
+    return Axios.patch('/statu/enAttente/'+id)
 }
 
 let enCours = (id) => {
-    return Axios.get('/statu/enCours/'+id)
+    return Axios.patch('/statu/enCours/'+id)
 }
 
 export const statuService = {
@@ -53,6 +64,7 @@ export const statuService = {
     getAction,
     supprimer,
     cloturer,
+    nonCloturer,
     enAttente,
     enCours
 }

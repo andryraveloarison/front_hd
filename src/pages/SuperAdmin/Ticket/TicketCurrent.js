@@ -89,7 +89,7 @@ const TicketCurrent = () => {
 
             statuService.enCours(statu_user_ticket)
             
-            if(ticket.statuId === 4){
+            if(ticket.statuId === 4 || ticket.statuId === 10){
             const newconversation ={
               "user":userId,
               "admin":adminId,

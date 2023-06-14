@@ -35,6 +35,7 @@ const Ticket = () => {
             <th className={'px-4 py-2'}>Titre</th>
             <th className={'px-4 py-2'}>Contenu</th>
             <th className={'px-4 py-2'}>Date</th>
+            <th className={'px-4 py-2'}>Admin</th>
             <th className={'px-4 py-2'}>Statut</th>
           </tr>
         </thead>
@@ -54,6 +55,7 @@ const Ticket = () => {
                 <td className={`px-4 py-2  text-center`}>{ticket.titre}</td>
                 <td className={`px-4 py-2  text-center`}>{ticket.contenu}</td>
                 <td className={`px-4 py-2  text-center`}>{ticket.createdAt}</td>
+                <td className={`px-4 py-2  text-center`}>{ticket.adminNom}</td>
                 <td className={`px-4 py-2  text-center`}>{statuService.getStatu(ticket.statuId)}</td>
               </tr>
             ))

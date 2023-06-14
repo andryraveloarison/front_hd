@@ -49,8 +49,8 @@ const User = () => {
                                 <th className="px-4 py-2">
                                     role
                                 </th>
-                                <th scope="col" className="px-4 py-2">
-                                    <span className="sr-only">Edit</span>
+                                <th className="px-4 py-2">
+                                    Edit
                                 </th>
                             </tr>
                         </thead>
