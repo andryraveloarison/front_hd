@@ -30,6 +30,15 @@ const User = () => {
         )
     }
 
+    const supprimer = (statuRoleId) => {
+       
+            userService.deleteUser(statuRoleId).then(res => {
+                window.location.reload();        
+            })
+        
+    }
+
+
     return (
         <div className="User bg-gray p-4 h-full">
         <h1 className="text-2xl font-bold mb-4">Liste Utilisateur</h1>
@@ -73,6 +82,13 @@ const User = () => {
                                                 className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
                                                 >
                                                 {roleService.getAction(user.userRole)} 
+                                            </button>
+                                            <button
+                                                onClick={() => supprimer(user.statuRoleId)}
+                                                className="bg-red-500 text-white font-bold rounded w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
+                                                data-te-ripple-init
+                                            >
+                                                supprimer
                                             </button>
                                             </td>
 

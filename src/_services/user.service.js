@@ -44,6 +44,9 @@ let getUserRole = () => {
 
 }
 
+let deleteUser = (idUserRole) => {
+    return Axios.patch('/user/deleteUser/'+idUserRole)
+}
 
 
 
@@ -55,5 +58,6 @@ export const userService = {
     getUserConnected,
     getUserRole,
     getUserAdmin,
+    deleteUser
 }
 
