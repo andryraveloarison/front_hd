@@ -6,6 +6,7 @@ import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client'
 import {Link} from 'react-router-dom'
+import Notification from "@/assets/notification.png";
 
 
 const Header = () => {
@@ -91,11 +92,26 @@ const Header = () => {
             </div>
 
             <div className=" flex items-end justify-start text-white py-4 px-16">
-                <button
-                    onClick={toggleNotificationList}
-                    > 
-                    Notification {nbNotif !==0 && (nbNotif)}
-                </button>
+                    <button onClick={toggleNotificationList}> 
+
+                        <div className="relative m-6 inline-flex w-fit">
+                                {
+                                    nbNotif !=0 && (
+                                    <div
+                                    className="absolute w-4 bottom-auto left-8 right-0 top-0 z-10 inline-block -translate-y-1/2 translate-x-1 rotate-0 skew-x-0 skew-y-0 scale-x-88 scale-y-100 whitespace-nowrap rounded-full bg-red-700 py-1 text-center align-baseline text-xs font-bold leading-none text-white">
+                                    {nbNotif !==0 && (nbNotif)}
+                                    </div>
+                                    )
+                                }
+                                <div
+                                    className="flex items-center justify-center rounded-lg  px-8 text-center text-white">
+                                    <img src={Notification}
+                                    className={`absolute cursor-pointer w-8`}
+                                    />
+                                </div>
+                            </div>
+
+                    </button>
                     {showNotifications && (
                     <div className="notificationList fixed top-10 bg-blue-500 py-4 my-4 w-40 ">
                         <ul>

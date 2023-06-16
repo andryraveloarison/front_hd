@@ -6,6 +6,8 @@ import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client'
 import {Link} from 'react-router-dom'
+import Notification from "@/assets/notification.png";
+
 
 
 const Header = () => {
@@ -17,17 +19,25 @@ const Header = () => {
     const [notification, setNotification] = useState([])
 
     useEffect(()=>{
-        notificationService.get_nbNotif_NonLu(user.id).then((res) =>
-        res.data !==0 && setnbNotif(res.data))
-        notificationService.get_notif_NonLu(user.id).then((res) => setNotification(res.data))
+        if(user.id){
+            notificationService.get_nbNotif_NonLu(user.id).then((res) =>
+            res.data !==0 && setnbNotif(res.data))
+            notificationService.get_notif_NonLu(user.id).then((res) => setNotification(res.data))
+        }
+        
     },[])
     
     const [showNotifications, setShowNotifications] = useState(false);
       
-    const toggleNotificationList = () => {
+    const toggleNotificationList = async () => {
           setShowNotifications(!showNotifications);
           setnbNotif(0)
-          notificationService.set_notification_Lu(user.id)
+          try {
+            await notificationService.set_notification_Lu(user.id);
+          } catch (error) {
+            // Handle the error gracefully
+            console.error('Failed to set notification as read:', error);
+          }
         };
 
 
@@ -71,8 +81,11 @@ const Header = () => {
         if(socket){
             socket.emit('disconnecte', user.id);
         }
-        accountService.logout()
+
+        const log = accountService.logout() 
         window.location.href = '/';
+
+        
     }
     
     const navigateChat = (e) => {
@@ -92,10 +105,25 @@ const Header = () => {
             </div>
 
             <div className=" flex items-end justify-start text-white py-4 px-16">
-                <button
-                    onClick={toggleNotificationList}
-                    > 
-                    Notification {nbNotif !==0 && (nbNotif)}
+                <button onClick={toggleNotificationList}> 
+
+                    <div className="relative m-6 inline-flex w-fit">
+                            {
+                                nbNotif !=0 && (
+                                <div
+                                className="absolute w-4 bottom-auto left-8 right-0 top-0 z-10 inline-block -translate-y-1/2 translate-x-1 rotate-0 skew-x-0 skew-y-0 scale-x-88 scale-y-100 whitespace-nowrap rounded-full bg-red-700 py-1 text-center align-baseline text-xs font-bold leading-none text-white">
+                                {nbNotif !==0 && (nbNotif)}
+                                </div>
+                                )
+                            }
+                            <div
+                                className="flex items-center justify-center rounded-lg  px-8 text-center text-white">
+                                <img src={Notification}
+                                className={`absolute cursor-pointer w-8`}
+                                />
+                            </div>
+                        </div>
+                    
                 </button>
                     {showNotifications && (
                     <div className="notificationList fixed top-10 bg-blue-500 py-4 my-4 w-40 ">

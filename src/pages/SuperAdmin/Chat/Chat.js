@@ -184,7 +184,7 @@ const Chat = () => {
 
     const nonCloturer = (id, ticketTitre, receiverId) => {
 
-        const notification ="Votre ticket sur "+ ticketTitre+ " est n'est pas resolu"
+        const notification ="Votre ticket sur "+ ticketTitre+ " n'est pas resolu"
         const dataNotif = {
             receiverId: receiverId,
             contenu:notification

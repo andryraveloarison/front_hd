@@ -114,7 +114,7 @@ const Ticket = () => {
                     name="contenu"
                     value={newTickets.contenu}
                     onChange={onChange}
-                    className="w-full border-2 rounded py-1 px-2 text-white"
+                    className="w-full border-2 rounded py-1 px-2 text-black"
                   />
                 </div>
                 <div className="group">

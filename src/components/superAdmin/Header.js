@@ -5,6 +5,7 @@ import { notificationService} from '@/_services/notification.service'
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client'
+import Notification from "@/assets/notification.png";
 
 
 const Header = () => {
@@ -76,14 +77,30 @@ const Header = () => {
 
     return (
         <div className="AHeader flex items-end  text-white py-4 px-6">
-            <button
-                onClick={toggleNotificationList}
-                > 
-                Notification {nbNotif !==0 && (nbNotif)}
-            </button>
+                <button onClick={toggleNotificationList} > 
+
+                <div className="relative m-6 inline-flex w-fit ">
+                            {
+                                nbNotif !=0 && (
+                                <div
+                                className="absolute w-4 bottom-auto left-8 right-0 top-0 z-10 inline-block -translate-y-1/2 translate-x-1 rotate-0 skew-x-0 skew-y-0 scale-x-88 scale-y-100 whitespace-nowrap rounded-full bg-red-700 py-1 text-center align-baseline text-xs font-bold leading-none text-white">
+                                {nbNotif !==0 && (nbNotif)}
+                                </div>
+                                )
+                            }
+                            <div
+                                className="flex items-center justify-center rounded-lg  px-8 text-center text-white">
+                                <img src={Notification}
+                                className={`absolute cursor-pointer w-8`}
+                                />
+                            </div>
+                        </div>
+                    
+                </button>
                 {showNotifications && (
-                <div className="notificationList fixed top-10 bg-blue-500 py-4 my-4 w-40 ">
-                    <ul>
+                <div className="notificationList fixed top-12 bg-blue-500 py-1 my-4 w-41 border-b">
+                   
+                    <ul className="m-0 p-0 border-b dark:border-neutral-500 " >
                         {
                             notification.length === 0 ? (
                                 <li> Aucune notification</li>
@@ -91,17 +108,21 @@ const Header = () => {
                                 notification.slice(-5)
                                 .sort((a, b) => b.id - a.id)
                                 .map((notif) => (
-                                  <li className="notificationItem mb-2">{notif.notification}</li>
-                                ))
+                                  <li className="notificationItem m-0 p-0">{notif.notification}
+                                  <br/> ---------------------------------------- 
+                                  </li>
+                                  
+                                  ))
                             )
                         }
+                        <li> Voir tous</li>
                     
                     </ul>
                 </div>
                 )}
            
 
-            <button onClick={(e) => logout(e)}className="bg-red-500 text-white font-bold  px-4 rounded">
+            <button onClick={(e) => logout(e)}className="bg-red-500 text-white font-bold px-4 rounded">
                 Logout
             </button>
         </div>
