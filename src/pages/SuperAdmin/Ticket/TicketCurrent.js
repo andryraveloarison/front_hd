@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-// import { useNavigate } from 'react-router-dom';
 import { ticketService, statuService, conversationService, userService, notificationService } from '@/_services';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
 import { io } from 'socket.io-client';
 import ReactPaginate from 'react-paginate';
 
@@ -13,7 +11,6 @@ import ReactPaginate from 'react-paginate';
 const TicketCurrent = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
-  let navigate = useNavigate()
   const userConnected = useSelector(selectUser)
 
   const [load, setLoad] = useState("true")
@@ -46,7 +43,8 @@ const TicketCurrent = () => {
       setLoad("false")
     }
   }
-  if (error) return <div>{error.message}</div>;
+  if (Error) return <div>{error.message}</div>;
+  if (isError) return <div>{TicketError.message}</div>;
 
 
 
@@ -147,8 +145,7 @@ const sendNotification= (userId,adminNom, ticketTitre,  adminId, userNom) =>{
         userId: userId,
         contenu:notification
       }).then(() => {
-        userId === userConnected.id ? (window.location.href = '/superAdmin/chat/index'):
-        (window.location.reload())
+        userId === userConnected.id && (window.location.href = '/superAdmin/chat/index')
       })
     }
     //NOTIFICATION
@@ -178,7 +175,7 @@ const supprimer = (id, userId, ticketTitre) => {
         notificationService.addNotification({
           userId: userId,
           contenu:notification
-        }).then(res => window.location.reload())
+        }).then()
 
     })
     .catch(err => console.log(err))

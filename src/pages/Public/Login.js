@@ -57,21 +57,38 @@ const Login = () => {
     }
 
     return (
-        <form onSubmit={onSubmit}>
-            <div className="group">
-                Se connecter
-                <label htmlFor="login">Identifiant</label>
-                <input type="text" name="email" value={credentials.email} onChange={onChange}></input>
-            </div>
-            <div className="group">
-                <label htmlFor="password">Mot de passe</label>
-                <input type="text" name="password" value={credentials.password} onChange={onChange}></input>
-            </div>
-            <div className="group">
-                <button>Connexion</button>
-            </div>
-            <span color='red'>{erreur}</span>
-        </form>
+        <form onSubmit={onSubmit} className="flex flex-col space-y-4">
+        <div className="group">
+          <h2 className="text-xl font-bold">Se connecter</h2>
+          <label htmlFor="login" className="mt-2">
+            Identifiant
+          </label>
+          <input
+            type="text"
+            name="email"
+            value={credentials.email}
+            onChange={onChange}
+            className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="group">
+          <label htmlFor="password">Mot de passe</label>
+          <input
+            type="password"
+            name="password"
+            value={credentials.password}
+            onChange={onChange}
+            className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="group">
+          <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Connexion
+          </button>
+        </div>
+        {erreur && <span className="text-red-500">{erreur}</span>}
+      </form>
+      
     );
 };
 

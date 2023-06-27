@@ -1,4 +1,4 @@
-import Avatar from '@/assets/avatar.svg'
+import Avatar from '@/assets/avatar.png'
 import Input from '@/components/Input';
 import { messageService, conversationService, statuService, notificationService } from '@/_services';
 import { useQuery } from 'react-query';
@@ -281,7 +281,7 @@ const Chat = () => {
         <div className='w-screen flex'>
             <div className='w-[25%]  h-screen bg-secondary'>
                 <div className='flex items-center my-8 mx-14'>
-                <div className='border border-primary p-[2px] rounded-full'>
+                <div>
                     <img src={Avatar} width={75} height={75}/>
                 </div>
                     <div className='ml-8'>

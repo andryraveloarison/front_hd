@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { accountService } from '@/_services/account.service';
 import { notificationService} from '@/_services/notification.service'
 import { selectUser } from '@/features/userSlice';
@@ -8,11 +7,10 @@ import { io } from 'socket.io-client'
 import {Link} from 'react-router-dom'
 import Notification from "@/assets/notification.png";
 
-
+// eslint-disable-next-line
 const Header = () => {
 
     
-    let navigate = useNavigate()
     const user = useSelector(selectUser)
     const [nbNotif,setnbNotif] = useState(0)
     const [notification, setNotification] = useState([])
@@ -21,7 +19,7 @@ const Header = () => {
         notificationService.get_nbNotif_NonLu(user.id).then((res) =>
         res.data !==0 && setnbNotif(res.data))
         notificationService.get_notif_NonLu(user.id).then((res) => setNotification(res.data))
-    },[])
+    },[user.id])
     
     const [showNotifications, setShowNotifications] = useState(false);
       
@@ -66,7 +64,7 @@ const Header = () => {
             })
         }
 		
-	}, [socket])
+	}, [socket,user])
 
     const logout = (e) => {
         if(socket){
@@ -96,7 +94,7 @@ const Header = () => {
 
                         <div className="relative m-6 inline-flex w-fit">
                                 {
-                                    nbNotif !=0 && (
+                                    nbNotif !==0 && (
                                     <div
                                     className="absolute w-4 bottom-auto left-8 right-0 top-0 z-10 inline-block -translate-y-1/2 translate-x-1 rotate-0 skew-x-0 skew-y-0 scale-x-88 scale-y-100 whitespace-nowrap rounded-full bg-red-700 py-1 text-center align-baseline text-xs font-bold leading-none text-white">
                                     {nbNotif !==0 && (nbNotif)}
@@ -106,6 +104,7 @@ const Header = () => {
                                 <div
                                     className="flex items-center justify-center rounded-lg  px-8 text-center text-white">
                                     <img src={Notification}
+                                    alt="icon notification" 
                                     className={`absolute cursor-pointer w-8`}
                                     />
                                 </div>
@@ -114,20 +113,21 @@ const Header = () => {
                     </button>
                     {showNotifications && (
                     <div className="notificationList fixed top-10 bg-blue-500 py-4 my-4 w-40 ">
-                        <ul>
-                            {
-                                notification.length === 0 ? (
-                                    <li> Aucune notification</li>
-                                ):(
-                                    notification.slice(-5)
-                                    .sort((a, b) => b.id - a.id)
-                                    .map((notif) => (
-                                    <li className="notificationItem mb-2">{notif.notification}</li>
-                                    ))
-                                )
-                            }
-                        
-                        </ul>
+                       <ul className="m-0 p-0 border-b dark:border-neutral-500">
+                        {notification.length === 0 ? (
+                            <li> Aucune notification</li>
+                        ) : (
+                            notification
+                                .slice(-5)
+                                .sort((a, b) => b.id - a.id)
+                                .map((notif, index) => (
+                                    <React.Fragment key={index}>
+                                        <li className="notificationItem m-0 p-0">{notif.notification}</li>
+                                        {index !== notification.length - 1 && <hr />}
+                                    </React.Fragment>
+                                ))
+                        )}
+                    </ul>
                     </div>
                     )}
             

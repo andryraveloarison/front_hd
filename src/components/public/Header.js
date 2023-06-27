@@ -6,16 +6,15 @@ import './header.css'
 
 const Header = () => {
     return (
-            <header className="pheader">
-                <nav>
-                    <ul>
-                        <li><Link to="/home">Accueil</Link></li>
-                        <li><Link to ="/login">&nbsp;Se connecter</Link></li>
-                        <li><Link to ="/signUp">&nbsp;S'inscrire</Link></li>
-                    </ul>
-                </nav>
-            </header>
-    );
+        <div className='CHeader flex items-end'>
+            <div className=" flex text-white py-4">
+                <ul className='list-none flex'>
+                    <li className='px-10'><Link to="home">Accueil</Link></li>
+                    <li className='px-10'><Link to ="/login">&nbsp;Se connecter</Link></li>
+                    <li className='px-10'><Link to ="/signUp">&nbsp;S'inscrire</Link></li>
+                </ul>
+            </div>
+        </div>    );
 };
 
 export default Header;
