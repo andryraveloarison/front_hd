@@ -19,6 +19,7 @@ const StatUser = () => {
       scales: {
         x: {
           beginAtZero: true,
+          position: 'bottom', 
         },
         y: {
           beginAtZero: true,
@@ -77,6 +78,7 @@ const StatUser = () => {
 
   return (
     <div className="chart-container" style={{ height: '400px' }}>
+      <p className='text-xl '>Performance des techniciens</p>
       <canvas ref={canvasRef}></canvas>
     </div>
   );

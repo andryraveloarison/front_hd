@@ -8,6 +8,7 @@
     background-color: rgb(14, 164, 190);
     display: flex;
     justify-content: flex-end;
+    position: relative;
 }
 
 .CHeader{

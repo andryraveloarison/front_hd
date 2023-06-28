@@ -205,11 +205,11 @@ const pageCount = Math.ceil(tickets.length / pageSize);
 
   
 return (
-  <div className="User bg-gray-100 p-4 h-full">
+  <div className="User p-4 h-full ml-[190px] mt-[90px] mr-[30px]"style={{ position:'relative' }}>
   <h1 className="text-2xl font-bold mb-4">Liste des tickets en cours</h1>
   <table className="w-full">
     <thead >
-    <tr class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+    <tr class="border-b transition duration-300 ease-in-out hover:bg-neutral-1'00 dark:border-neutral-500 dark:hover:bg-neutral-600"
     >
         <th className="px-4 py-2">#</th>
         <th className="px-4 py-2">Utilisateur</th>

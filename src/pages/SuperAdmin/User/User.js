@@ -40,7 +40,7 @@ const User = () => {
 
 
     return (
-        <div className="User bg-gray p-4 h-full">
+        <div className="User p-4 h-full ml-[190px] mt-[90px] mr-[30px]" style={{ position:'relative' }} >
         <h1 className="text-2xl font-bold mb-4">Liste Utilisateur</h1>
                     <table className="w-full">
                         <thead>

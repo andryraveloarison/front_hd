@@ -9,10 +9,15 @@ import SideMenu from '@/components/admin/SideMenu'
 
 const ALayout = () => {
     return (
-        <div className="Alayout"> 
-            <Header/> 
-            <div id="admin">
-                <div id ="admin_body"><Outlet/></div>
+        <div className="Alayout flex "> 
+            <div className=" items-start">
+            <SideMenu/>
+            </div>
+            <div className=" flex flex-col flex-1">
+                <Header/> 
+                <div className="h-full">
+                    <Outlet/>
+                </div>
             </div>
             
         </div>

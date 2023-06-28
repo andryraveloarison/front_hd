@@ -80,7 +80,7 @@ const Header = () => {
     }
     return (
 
-        <div className='CHeader flex items-end'>
+        <div className="AHeader flex items-end  text-white  " style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 999 }}>
             <div className=" flex text-white py-4">
                 <ul className='list-none flex'>
                     <li className='px-10'><Link to="/">Accueil</Link></li>
@@ -89,7 +89,7 @@ const Header = () => {
             
             </div>
 
-            <div className=" flex items-end justify-start text-white py-4 px-16">
+            <div className="AHeader flex items-end  text-white py-4 px-6 " style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100999 }}>
                     <button onClick={toggleNotificationList}> 
 
                         <div className="relative m-6 inline-flex w-fit">

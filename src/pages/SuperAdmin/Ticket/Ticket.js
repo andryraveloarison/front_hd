@@ -24,7 +24,7 @@ const Ticket = () => {
   };
 
   return (
-    <div className={'User bg-gray-100 p-4 h-full'}>
+    <div className={'User p-4 h-full ml-[190px] mt-[90px] mr-[30px]' } style={{ position:'relative' }}>
       <h1 className={'text-2xl font-bold mb-4'}>Liste des tickets</h1>
       <table className={'table-auto w-full'}>
         <thead>

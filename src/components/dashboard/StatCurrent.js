@@ -62,8 +62,8 @@ const StatCurrent = () => {
 
   return (
     <div className="chart-container" style={{ height: '400px' }}>
+      <p className='text-xl '>Tickets actifs</p>
       <canvas ref={canvasRef} className="mx-auto"></canvas>
-      
     </div>
   );
 };

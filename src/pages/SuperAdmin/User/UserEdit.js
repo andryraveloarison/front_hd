@@ -49,7 +49,7 @@ const UserEdit = () => {
 
 
     return (
-        <div className="UserEdit">
+        <div className="UserEdit"style={{ position:'relative' }} >
             Editer un utilisateur
             <form onSubmit={onSubmit}>
             <div className="group">

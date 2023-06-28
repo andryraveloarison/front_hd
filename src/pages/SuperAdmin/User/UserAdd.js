@@ -31,7 +31,7 @@ const UserAdd = () => {
 
 
     return (
-        <div className="UserEdit">
+        <div className="UserEdit ml-[190px] mt-[90px] mr-[30px]"style={{ position:'relative' }} >
         Creer un compte
         <form onSubmit={onSubmit}>
 

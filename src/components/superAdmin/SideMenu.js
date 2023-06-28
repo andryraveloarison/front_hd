@@ -25,7 +25,7 @@ const SideMenu = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex "style={{ position: 'fixed', top: 0, left: 0, width: '100%'}}>
       <div
         className={`${
           open ? "w-65" : "w-20 "
@@ -59,7 +59,7 @@ const SideMenu = () => {
               className={`rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-start gap-x-4 
               ${menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"} ${open && "flex"}`}
             >
-              <img src={menu.src} />
+              <img src={menu.src} />  
               {menu.src === User? (
                 <details className="items-start">
                   <summary>

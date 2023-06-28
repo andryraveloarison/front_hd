@@ -21,6 +21,7 @@ const StatLast = () => {
       scales: {
         x: {
           beginAtZero: true,
+          position: 'bottom', 
         },
         y: {
           beginAtZero: true,
@@ -81,7 +82,10 @@ const StatLast = () => {
 
   
   return (
+
+    
     <div className="chart-container" style={{ height: '400px' }}>
+      <p className='text-xl '>30 dernier jours</p>
       <canvas ref={canvasRef}></canvas>
     </div>
   );

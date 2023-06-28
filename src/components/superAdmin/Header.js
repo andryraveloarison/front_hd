@@ -10,6 +10,7 @@ import Notification from "@/assets/notification.png";
 const Header = () => {
 
     
+
     const user = useSelector(selectUser)
     const [nbNotif,setnbNotif] = useState(0)
     const [notification, setNotification] = useState([])
@@ -46,6 +47,7 @@ const Header = () => {
                 userRole: user.role,
             }
             socket.emit('addUser', {data});
+
             socket.on('getNotification', newNotification => {        
                     alert(newNotification.contenu)
                     var today = new Date(),
@@ -58,6 +60,7 @@ const Header = () => {
 
                         ]);
                     setnbNotif(prevNbNotif => prevNbNotif + 1);
+
             })
         }
 		
@@ -74,7 +77,7 @@ const Header = () => {
     
 
     return (
-        <div className="AHeader flex items-end  text-white py-4 px-6">
+        <div className="AHeader flex items-end  text-white py-4 px-6 " style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 999 }}>
                 <button onClick={toggleNotificationList} > 
 
                 <div className="relative m-6 inline-flex w-fit ">
