@@ -18,8 +18,8 @@ const Login = () => {
 
 
     const [credentials, setCredentials]=useState({
-        email: 'superAdmin@gmail.com',
-        password:'superAdmin'
+        email: 'admin@gmail.com',
+        password:'admin'
     })
 
     const onChange=(e) =>{

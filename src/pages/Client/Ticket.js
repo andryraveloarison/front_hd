@@ -8,6 +8,7 @@ import ReactPaginate from 'react-paginate';
 
 const Ticket = () => {
   const [showForm, setShowForm] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
 
@@ -24,6 +25,16 @@ const Ticket = () => {
     contenu: '',
     userId: user.id,
   });
+
+
+  const [details, setdetails] = useState({
+    titre: '',
+    contenu: '',
+    date:'',
+    solution:''
+  });
+
+
 
   // Socket
   const [socket, setSocket] = useState(null);
@@ -84,66 +95,97 @@ const Ticket = () => {
   const handleNewButtonClick = () => {
     setShowForm(true);
   };
+  
+  const handleCloseButtonClick = () => {
+    setShowForm(false);
+  };
 
+  const detailsButtonClick = (titre,contenu,date,solution) => {
+
+   setdetails({
+    titre: titre,
+    contenu: contenu,
+    date: date,
+    solution: solution
+   } )
+
+    setShowDetails(true);
+  };
+  
+  const detailsCloseButtonClick = () => {
+    setShowDetails(false);
+  };
+  
   return (
     <div className="User bg-white p-4 h-full">
       <h1 className="text-2xl font-bold mb-4">Mes tickets</h1>
       {showForm ? (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className=" bg-white w-[500px] rounded">
-              <form onSubmit={onSubmit} className='mt-9' >
-                <h2 className="text-black text-2xl pb-3 ">Créer un ticket</h2>
-                <div className="group">
-                  <label htmlFor="titre" className="text-black">
-                    Titre
-                  </label>
-                  <input
-                    type="text"
-                    name="titre"
-                    value={newTickets.titre}
-                    onChange={onChange}
-                    className="w-full border-2 rounded py-1 px-2 texte-white"
-                  />
-                </div>
-                <div className="group">
-                  <label htmlFor="contenu" className="text-black">
-                    Contenu
-                  </label>
-                  <input
-                    type="text"
-                    name="contenu"
-                    value={newTickets.contenu}
-                    onChange={onChange}
-                    className="w-full border-2 rounded py-1 px-2 text-black"
-                  />
-                </div>
-                <div className="group">
-                  <button className="bg-gray-800 text-white w-full h-[40px] rounded my-2 mt-4">
-                    Créer
-                  </button>
-                </div>
-              </form>
+        
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+         
+          <div className=" bg-white w-[900px] rounded">
+            <div className="flex justify-end">
+
+                <button
+                  className="text-black w-[30px] h-[30px]  rounded mt-0"
+                  onClick={handleCloseButtonClick}
+                >
+                  X
+                </button>
             </div>
+
+            <form onSubmit={onSubmit} className="mt-2 w-[500px]">
+              <h2 className="text-black text-2xl pb-3">Créer un ticket</h2>
+              <div className="group">
+                <label htmlFor="titre" className="text-black">
+                  Titre
+                </label>
+                <input
+                  type="text"
+                  name="titre"
+                  value={newTickets.titre}
+                  onChange={onChange}
+                  className="w-full border-2 rounded py-1 px-2 texte-white"
+                />
+              </div>
+              <div className="group">
+                <label htmlFor="contenu" className="text-black">
+                  Contenu
+                </label>
+                <textarea
+                  name="contenu"
+                  value={newTickets.contenu}
+                  onChange={onChange}
+                  className="w-full h-40 border-2 rounded py-1 px-2 text-black"
+                />
+
+              </div>
+              <div className="group">
+                <button className="bg-gray-800 text-white w-full h-[40px] rounded my-2 mt-4">
+                  Créer
+                </button>
+              </div>
+            </form>
+            
           </div>
-        ) : (
-          <button
-            className="bg-gray-800 text-white w-[100px] h-[30px] rounded mt-4"
-            onClick={handleNewButtonClick}
-          >
-            Nouveau
-          </button>
-    )}
-
-
+        </div>
+      ) : (
+        <button
+          className="bg-gray-800 text-white w-[100px] h-[30px] rounded mt-4"
+          onClick={handleNewButtonClick}
+        >
+          Nouveau
+        </button>
+      )}
 
       <table className="table-auto w-full">
         <thead>
           <tr className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
             <th className="px-4 py-2">#</th>
             <th className="px-4 py-2">titre</th>
-            <th className="px-4 py-2">contenu</th>
             <th className="px-4 py-2">date</th>
             <th className="px-4 py-2">status</th>
+            <th className="px-4 py-2">action</th>
           </tr>
         </thead>
         <tbody>
@@ -167,16 +209,85 @@ const Ticket = () => {
               >
                 <td className="px-4 py-2 text-center">{ticket.id}</td>
                 <td className="px-4 py-2 text-center">{ticket.titre}</td>
-                <td className="px-4 py-2 text-center">{ticket.contenu}</td>
                 <td className="px-4 py-2 text-center">{ticket.createdAt}</td>
                 <td className="px-4 py-2 text-center">
                   {statuService.getStatu(ticket.statuId)}
+                </td>
+                <td className="px-4 py-2 text-center">
+                  <button
+                      className="bg-gray-800 text-white w-[100px] h-[30px] rounded mt-4"
+                      onClick={() => detailsButtonClick(ticket.titre, ticket.contenu, ticket.createdAt, ticket.solution)}                    >
+                      {ticket.solution === "aucune" ? (
+                        <p>Details</p>
+                      ):(
+                        <p>Solution</p>
+                      )}
+                  </button>
                 </td>
               </tr>
             ))
           )}
         </tbody>
       </table>
+
+      {showDetails && (
+        
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+         
+          <div className=" bg-white w-[900px] rounded">
+            <div className="flex justify-end">
+
+                <button
+                  className="text-black w-[30px] h-[30px]  rounded mt-0"
+                  onClick={detailsCloseButtonClick}
+                >
+                  X
+                </button>
+            </div>
+
+            <form onSubmit={onSubmit} className="mt-2 w-[800px] ">
+              <div className=' flex'>
+              <h2 className="text-black text-2xl pb-5">{details.titre}</h2>
+              </div>
+              
+              <div className="group flex">
+                <div className=' w-[40%]'>
+                  Date :
+                </div>
+                <div>
+                  {details.date}
+                </div>
+              </div>
+
+              <div className="group flex">
+                <div className=' w-[40%]'>
+                  Description:
+                </div>
+                <div>
+                  {details.contenu}
+                </div>
+              </div>
+
+              {details.solution !== "aucune" &&
+                (
+                
+                  <div className="group flex">
+                    <div className=' w-[40%]'>
+                      Solution:
+                    </div>
+
+                    <div> {details.solution}</div>     
+                  </div>
+                )
+              }
+
+            </form>
+            
+          </div>
+        </div>
+      )}
+
+
 
       <ReactPaginate
         previousLabel={'Previous'}

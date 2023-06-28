@@ -23,7 +23,7 @@ const UserAdd = () => {
         e.preventDefault()
         userService.addUser(user)
             .then(res => {
-                navigate('../index')
+                navigate('/login')
             })
             .catch(err => console.log(err))
         
@@ -31,30 +31,50 @@ const UserAdd = () => {
 
 
     return (
-        <div className="UserEdit ml-[190px] mt-[90px] mr-[30px]"style={{ position:'relative' }} >
-        Creer un compte
-        <form onSubmit={onSubmit}>
-
-        <div className="group">
-            <label htmlFor="nom">Nom</label>
-            <input type="text" name="nom" value={user.nom} onChange={onChange}/>
-        </div>
-
-        <div className="group">
-            <label htmlFor="email">Email</label>
-            <input type="text" name="email" value={user.email} onChange={onChange}/>
-        </div>
         
+        <form onSubmit={onSubmit} className="flex flex-col space-y-4">
+        <h2 className="text-xl font-bold">Nouveau utilisateur</h2>
         <div className="group">
-                <label htmlFor="password">Mot de passe</label>
-                <input type="text" name="password" value={user.password} onChange={onChange}></input>
-            </div>
-        <div className="group">
-            <button>Ajouter</button>
+          <label htmlFor="nom">Nom</label>
+          <input
+            type="text"
+            name="nom"
+            value={user.nom}
+            onChange={onChange}
+            className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-
-    </form>
-    </div>
+      
+        <div className="group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="text"
+            name="email"
+            value={user.email}
+            onChange={onChange}
+            className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      
+        <div className="group">
+          <label htmlFor="password">Mot de passe</label>
+          <input
+            type="password"
+            name="password"
+            value={user.password}
+            onChange={onChange}
+            className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      
+        <div className="group">
+          <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Ajouter
+          </button>
+        </div>
+      </form>
+      
+    
     );
 };
 

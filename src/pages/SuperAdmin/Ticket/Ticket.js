@@ -7,6 +7,10 @@ const Ticket = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
 
+  const [showDetails, setShowDetails] = useState(false);
+  const [details, setdetails] = useState({});
+
+
   const { isLoading, isError, data: tickets, error } = useQuery(
     'tickets',
     () => ticketService.getAll().then((res) => res.data.ticket)
@@ -23,8 +27,20 @@ const Ticket = () => {
     setCurrentPage(data.selected);
   };
 
+  const detailsButtonClick = (ticket) => {
+
+    setdetails(ticket )
+ 
+     setShowDetails(true);
+   };
+   
+   const detailsCloseButtonClick = () => {
+     setShowDetails(false);
+   };
+
+
   return (
-    <div className={'User p-4 h-full ml-[190px] mt-[90px] mr-[30px]' } style={{ position:'relative' }}>
+    <div className={'User p-4 h-full ml-[250px] mt-[70px] mr-[30px] ' } style={{ position:'relative' }}>
       <h1 className={'text-2xl font-bold mb-4'}>Liste des tickets</h1>
       <table className={'table-auto w-full'}>
         <thead>
@@ -33,10 +49,10 @@ const Ticket = () => {
             <th className={'px-4 py-2'}>#</th>
             <th className={'px-4 py-2'}>Utilisateur</th>
             <th className={'px-4 py-2'}>Titre</th>
-            <th className={'px-4 py-2'}>Contenu</th>
             <th className={'px-4 py-2'}>Date</th>
             <th className={'px-4 py-2'}>Admin</th>
             <th className={'px-4 py-2'}>Statut</th>
+            <th className={'px-4 py-2'}>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -53,15 +69,106 @@ const Ticket = () => {
                 <td className={`px-4 py-2  text-center`}>{ticket.id}</td>
                 <td className={`px-4 py-2  text-center`}>{ticket.userNom}</td>
                 <td className={`px-4 py-2  text-center`}>{ticket.titre}</td>
-                <td className={`px-4 py-2  text-center`}>{ticket.contenu}</td>
                 <td className={`px-4 py-2  text-center`}>{ticket.createdAt}</td>
                 <td className={`px-4 py-2  text-center`}>{ticket.adminNom}</td>
                 <td className={`px-4 py-2  text-center`}>{statuService.getStatu(ticket.statuId)}</td>
+                <td className="px-4 py-2 text-center">
+                  <button
+                      className="bg-gray-800 text-white w-[100px] h-[30px] rounded "
+                      onClick={() => detailsButtonClick(ticket)}                    >
+                        Details
+                  </button>
+                </td>
               </tr>
             ))
           )}
         </tbody>
       </table>
+
+      {showDetails && (
+        
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+         
+          <div className=" bg-white w-[900px] rounded">
+            <div className="flex justify-end">
+
+                <button
+                  className="text-black w-[30px] h-[30px]  rounded mt-0"
+                  onClick={detailsCloseButtonClick}
+                >
+                  X
+                </button>
+            </div>
+
+            <form className="mt-2 w-[800px] ">
+              <div className=' flex'>
+              <h2 className="text-black text-2xl pb-5">{details.titre}</h2>
+              </div>
+              
+              <div className="group flex">
+                <div className=' w-[40%]'>
+                  Date :
+                </div>
+                <div>
+                  {details.createdAt}
+                </div>
+              </div>
+
+              <div className="group flex">
+                <div className=' w-[40%]'>
+                  Description:
+                </div>
+                <div>
+                  {details.contenu}
+                </div>
+              </div>
+
+              <div className="group flex">
+                <div className=' w-[40%]'>
+                  Technicien:
+                </div>
+                <div>
+                  {
+                    details.adminNom !== "none" ? (
+                      <div>{details.adminNom}</div>
+                    ):(
+                      <div> Aucune </div>
+                    )
+                  }
+                  
+                </div>
+              </div>
+
+              <div className="group flex">
+                <div className=' w-[40%]'>
+                  Status :
+                </div>
+                <div>
+                  {statuService.getStatu(details.statuId)}
+                </div>
+              </div>
+
+              {details.solution !== "aucune" &&
+                (
+                
+                  <div className="group flex">
+                    <div className=' w-[40%]'>
+                      Solution:
+                    </div>
+
+                    <div> {details.solution}</div>     
+                  </div>
+                )
+              }
+
+
+            </form>
+            
+          </div>
+        </div>
+      )}
+
+
       <ReactPaginate
         previousLabel={'Previous'}
         nextLabel={'Next'}

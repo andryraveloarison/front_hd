@@ -1,6 +1,6 @@
 import Avatar from '@/assets/avatar.png'
 import Input from '@/components/Input';
-import { messageService, conversationService, statuService, notificationService } from '@/_services';
+import { messageService, conversationService, statuService, notificationService, solutionService } from '@/_services';
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
@@ -10,14 +10,29 @@ import { toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 const Chat = () => {
-
+    const [showForm, setShowForm] = useState(false);
     const user = useSelector(selectUser)
     const[messages,setMessages] = useState({
         messages:[],
         contenu:{}
         })
 
+
+
     const messagesRef = useRef(messages);
+
+    const [newSolution, setNewSolution] = useState({
+    contenu: "",
+    ticketId: 1 
+  });
+
+    const onChange = (e) => {
+    setNewSolution({
+      ...newSolution,
+      [e.target.name]: e.target.value,
+    });
+  };
+
 
     useEffect(() => {
           messagesRef.current = messages;
@@ -104,13 +119,14 @@ const Chat = () => {
 
 
 
-    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket) => {
+    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId) => {
 
         
         messageService.getMessage(conversationId)
         .then(res => {
             setMessages({messages:res.data,
-                        contenu:{ticketTitre:ticketTitre,
+                        contenu:{ticketId:ticketId,
+                                 ticketTitre:ticketTitre,
                                  ticketContenu:ticketContenu,
                                  receiverNom:receiverNom,
                                  statuId:statuId,
@@ -125,8 +141,8 @@ const Chat = () => {
 
     if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
         const lastConversation = conversations.slice(0, 1)[0]; // Obtenir le dernier élément de conversations
-        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,statu_user_ticket } = lastConversation;
-        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket);
+        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,statu_user_ticket,ticketId } = lastConversation;
+        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket,ticketId);
     }
 
 
@@ -154,13 +170,19 @@ const Chat = () => {
     }
 
 
-    const cloturer = (id, ticketTitre, receiverId) => {
+    const cloturer = (id, ticketTitre, receiverId, ticketId) => {
 
         const notification ="Votre ticket sur "+ ticketTitre+ " est resolu"
         const dataNotif = {
             receiverId: receiverId,
             contenu:notification
           }
+
+        setNewSolution({
+            ...newSolution,
+            ticketId: ticketId,
+        })
+
           if (socket) {
             socket.emit('sendNotification', dataNotif);
             }
@@ -174,8 +196,7 @@ const Chat = () => {
 
         statuService.cloturer(id)
         .then(res => {
-            alert('Le ticket est resolu')
-            window.location.reload();
+            setShowForm(true);
     
         })
         .catch(err => console.log(err))
@@ -275,6 +296,20 @@ const Chat = () => {
             
     }
 
+    const onSubmit = (e) => {
+        e.preventDefault();
+        solutionService.addSolution(newSolution).then((res) => {
+            
+            window.location.reload();
+        })
+        .catch((err) => console.log(err));
+    }
+
+
+    const handleCloseButtonClick = () => {
+        setShowForm(false);
+      };
+    
     
     
     return (
@@ -298,10 +333,10 @@ const Chat = () => {
                                 <></>
                               ) : (
                                 
-                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket})=>{
+                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket,ticketId})=>{
                                 return( 
                                     <div className='flex items-center py-8 border-b border-b-gray-300'>
-                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket)}>
+                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId)}>
                                             <div>
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
@@ -347,17 +382,14 @@ const Chat = () => {
                         </button>
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold h-10 w-16 rounded" onClick={() => cloturer(messages.contenu.statu_user_ticket, 
                                                                                                                                            messages.contenu.ticketTitre,
-                                                                                                                                           messages.receiverId)}>Resolu</button>
+                                                                                                                                           messages.receiverId,
+                                                                                                                                           messages.contenu.ticketId)}>Resolu</button>
                         <button className="bg-red-500 hover:bg-red-700 text-white font-bold h-10 w-16 rounded" onClick={() => nonCloturer(messages.contenu.statu_user_ticket, 
-                                                                                                                                            messages.contenu.ticketTitre,
-                                                                                                                                            messages.receiverId)}>NonResolu</button>                     
+                                                                                                                                            messages.contenu.ticketTitre,                                                                                                                                       messages.receiverId)}>NonResolu</button>                     
                         </div>
                     </div>
                   </div>
-                  
-                
-
-                              
+                    
                
             )}
 
@@ -433,7 +465,50 @@ const Chat = () => {
                
             )}
             
-            </div>                                                                                                                                                                                                                                                                                                       
+            </div>        
+
+
+        
+        {showForm && (
+        
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            
+            <div className=" bg-white w-[900px] rounded">
+                <div className="flex justify-end">
+
+                    <button
+                    className="text-black w-[30px] h-[30px]  rounded mt-0"
+                    onClick={handleCloseButtonClick}
+                    >
+                    X
+                    </button>
+                </div>
+
+                <form onSubmit={onSubmit} className="mt-2 w-[500px]">
+                <h2 className="text-black text-2xl pb-3">Ajouter une solution</h2>
+
+                <div className="group">
+                    <label htmlFor="contenu" className="text-black">
+                    Solution
+                    </label>
+                    <textarea
+                    name="contenu"
+                    value={newSolution.contenu}
+                    onChange={onChange}
+                    className="w-full h-40 border-2 rounded py-1 px-2 text-black"
+                    />
+
+                </div>
+                <div className="group">
+                    <button className="bg-gray-800 text-white w-full h-[40px] rounded my-2 mt-4">
+                    Resolu
+                    </button>
+                </div>
+                </form>
+                
+            </div>
+        </div>
+        )}                                                                                                                                                                                                                                                                                       
             
         </div>                                                                                                                                                                             
     );

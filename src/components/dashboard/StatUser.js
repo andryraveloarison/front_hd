@@ -78,7 +78,7 @@ const StatUser = () => {
 
   return (
     <div className="chart-container" style={{ height: '400px' }}>
-      <p className='text-xl '>Performance des techniciens</p>
+      <p className='text-xl'>Performance des techniciens</p>
       <canvas ref={canvasRef}></canvas>
     </div>
   );

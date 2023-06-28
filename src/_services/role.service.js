@@ -2,14 +2,14 @@ import Axios from "./caller.service"
 
 const role = [
     "indefini", //0
-    "admin",     //1
-    "user",  //2
+    "technicien",     //1
+    "client",  //2
 ]
 
 const action = [
     "aucune",
-    "=> user",  //5
-    "=> admin", //4
+    "client",  //5
+    "technicien", //4
 
 ]
 
