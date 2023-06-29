@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Control from "@/assets/control.png";
 import Logo from "@/assets/logo.png";
-import Chart_fill from "@/assets/Chart_fill.png";
+import Dashboard from "@/assets/Chart_fill.png";
 import Chat from "@/assets/Chat.png";
+import Ticket from "@/assets/Calendar.png";
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 
@@ -12,8 +13,11 @@ const SideMenu = () => {
   const user = useSelector(selectUser)
   const [open, setOpen] = useState(true);
   const Menus = [
-    { title: "Dashboard", src: Chart_fill },
+    { title: "Dashboard", src: Dashboard },
+    { title: "Ticket ", src: Ticket },
     { title: "Discussion", src: Chat },
+
+
   ];
 
   const handleToggle = () => {
@@ -60,11 +64,15 @@ const SideMenu = () => {
                 <span className={`${!open && "hidden"} origin-left duration-200`}>
                   <Link to="/admin/chat/index">{menu.title}</Link>
                 </span>
-              ): (
+              ): menu.src === Dashboard ?(
                 <span className={`${!open && "hidden"} origin-left duration-200`}>
                   <Link to="/admin/">{menu.title}</Link>
                 </span>
-              )}
+              ): (
+              
+                <Link to="/admin/ticket/">Tickets</Link>    
+            
+            )}
             </li>
           ))}
         </ul>

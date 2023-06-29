@@ -3,7 +3,7 @@ import {Routes, Route} from 'react-router-dom'
 import Error from '@/_utils/Error';
 
 
-import { ALayout, Dashboard } from '@/pages/Admin'
+import { ALayout, Dashboard, Ticket } from '@/pages/Admin'
 import { Chat } from '@/pages/Admin/Chat';
 
 
@@ -16,6 +16,7 @@ const AdminRouter = () => {
 
             <Route index element={<Dashboard/>}/>
             <Route path="dashboard" element={<Dashboard/>}/>
+            <Route path="ticket" element={<Ticket/>}/>
             <Route path="*" element={<Error/>}/>
 
           </Route>

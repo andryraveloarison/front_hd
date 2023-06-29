@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { ticketService, statuService, notificationService} from '@/_services';
+import { ticketService, statuService, notificationService } from '@/_services';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
@@ -9,6 +9,7 @@ import ReactPaginate from 'react-paginate';
 const Ticket = () => {
   const [showForm, setShowForm] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [searchTitle, setSearchTitle] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
 
@@ -16,8 +17,7 @@ const Ticket = () => {
 
   const { isLoading, isError, data: tickets, error } = useQuery(
     ['tickets', user.id],
-    () =>
-      ticketService.getMyTickets(user.id).then((res) => res.data.ticket)
+    () => ticketService.getMyTickets(user.id).then((res) => res.data.ticket)
   );
 
   const [newTickets, setNewTickets] = useState({
@@ -26,15 +26,13 @@ const Ticket = () => {
     userId: user.id,
   });
 
-
-  const [details, setdetails] = useState({
+  const [details, setDetails] = useState({
     titre: '',
     contenu: '',
-    date:'',
-    solution:''
+    date: '',
+    solution: '',
+    ticketId:''
   });
-
-
 
   // Socket
   const [socket, setSocket] = useState(null);
@@ -42,7 +40,6 @@ const Ticket = () => {
   useEffect(() => {
     setSocket(io('http://localhost:8080'));
   }, []);
-
 
   const onChange = (e) => {
     setNewTickets({
@@ -60,19 +57,19 @@ const Ticket = () => {
       userId: user.id,
     });
 
-    const notification =user.nom+" a creer un nouveau ticket"
+    const notification = user.nom + ' a créé un nouveau ticket';
     if (socket) {
       socket.emit('sendNotification', {
         receiverId: 1,
-        contenu:notification
+        contenu: notification,
       });
     }
-    
-    //Ajouter le notification dans la base
+
+    // Ajouter la notification dans la base
     notificationService.addNotification({
-      userId:1,
-      contenu:notification
-    })
+      userId: 1,
+      contenu: notification,
+    });
 
     console.log(newTickets);
 
@@ -95,43 +92,46 @@ const Ticket = () => {
   const handleNewButtonClick = () => {
     setShowForm(true);
   };
-  
+
   const handleCloseButtonClick = () => {
     setShowForm(false);
   };
 
-  const detailsButtonClick = (titre,contenu,date,solution) => {
-
-   setdetails({
-    titre: titre,
-    contenu: contenu,
-    date: date,
-    solution: solution
-   } )
+  const detailsButtonClick = (titre, contenu, date, solution,statuId) => {
+    setDetails({
+      titre: titre,
+      contenu: contenu,
+      date: date,
+      solution: solution,
+      statuId: statuId
+    });
 
     setShowDetails(true);
   };
-  
+
   const detailsCloseButtonClick = () => {
     setShowDetails(false);
   };
-  
+
+  const handleSearchTitleChange = (event) => {
+    setSearchTitle(event.target.value);
+    setCurrentPage(0);
+  };
+
   return (
     <div className="User bg-white p-4 h-full">
       <h1 className="text-2xl font-bold mb-4">Mes tickets</h1>
-      {showForm ? (
-        
+      <div className="flex items-end justify-between mb-5">
+        {showForm ? (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-         
-          <div className=" bg-white w-[900px] rounded">
+          <div className=" bg-white w-[600px] rounded">
             <div className="flex justify-end">
-
-                <button
-                  className="text-black w-[30px] h-[30px]  rounded mt-0"
-                  onClick={handleCloseButtonClick}
-                >
-                  X
-                </button>
+              <button
+                className="text-black w-[30px] h-[30px]  rounded mt-0"
+                onClick={handleCloseButtonClick}
+              >
+                X
+              </button>
             </div>
 
             <form onSubmit={onSubmit} className="mt-2 w-[500px]">
@@ -158,7 +158,6 @@ const Ticket = () => {
                   onChange={onChange}
                   className="w-full h-40 border-2 rounded py-1 px-2 text-black"
                 />
-
               </div>
               <div className="group">
                 <button className="bg-gray-800 text-white w-full h-[40px] rounded my-2 mt-4">
@@ -166,7 +165,6 @@ const Ticket = () => {
                 </button>
               </div>
             </form>
-            
           </div>
         </div>
       ) : (
@@ -177,6 +175,19 @@ const Ticket = () => {
           Nouveau
         </button>
       )}
+
+             
+      <div className="flex justify-end ">
+        <input
+          id="searchTitle"
+          placeholder='Recherche'
+          type="text"
+          onChange={handleSearchTitleChange}
+          className="border border-gray-300 rounded px-2 py-1"
+        />
+      </div>
+
+</div>
 
       <table className="table-auto w-full">
         <thead>
@@ -197,127 +208,122 @@ const Ticket = () => {
             <tr>
               <td colSpan="5">{error.message}</td>
             </tr>
-          ) : currentPageTickets?.length === 0 ? ( // Add conditional check for currentPageTickets
+          ) : currentPageTickets?.length === 0 ? (
             <tr>
               <td colSpan="5">Aucun ticket en cours</td>
             </tr>
           ) : (
-            currentPageTickets.map((ticket) => (
-              <tr
-                key={ticket.id}
-                className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
-              >
-                <td className="px-4 py-2 text-center">{ticket.id}</td>
-                <td className="px-4 py-2 text-center">{ticket.titre}</td>
-                <td className="px-4 py-2 text-center">{ticket.createdAt}</td>
-                <td className="px-4 py-2 text-center">
-                  {statuService.getStatu(ticket.statuId)}
-                </td>
-                <td className="px-4 py-2 text-center">
-                  <button
-                      className="bg-gray-800 text-white w-[100px] h-[30px] rounded mt-4"
-                      onClick={() => detailsButtonClick(ticket.titre, ticket.contenu, ticket.createdAt, ticket.solution)}                    >
+            currentPageTickets
+              .filter((ticket) =>
+                ticket.titre.toLowerCase().includes(searchTitle.toLowerCase())
+              )
+              .map((ticket) => (
+                <tr
+                  key={ticket.id}
+                  className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                >
+                  <td className="px-4 py-2 text-center">{ticket.id}</td>
+                  <td className="px-4 py-2 text-center">{ticket.titre}</td>
+                  <td className="px-4 py-2 text-center">{ticket.createdAt}</td>
+                  <td className="px-4 py-2 text-center">
+                    {statuService.getStatu(ticket.statuId)}
+                  </td>
+                  <td className="px-4 py-2 text-center">
+                    <button
+                      className="bg-gray-800 text-white w-[100px] h-[30px] rounded"
+                      onClick={() =>
+                        detailsButtonClick(
+                          ticket.titre,
+                          ticket.contenu,
+                          ticket.createdAt,
+                          ticket.solution,
+                          ticket.statuId
+                        )
+                      }
+                    >
                       {ticket.solution === "aucune" ? (
                         <p>Details</p>
-                      ):(
+                      ) : (
                         <p>Solution</p>
                       )}
-                  </button>
-                </td>
-              </tr>
-            ))
+                    </button>
+                  </td>
+                </tr>
+              ))
           )}
         </tbody>
       </table>
 
       {showDetails && (
-        
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-         
           <div className=" bg-white w-[900px] rounded">
             <div className="flex justify-end">
-
-                <button
-                  className="text-black w-[30px] h-[30px]  rounded mt-0"
-                  onClick={detailsCloseButtonClick}
-                >
-                  X
-                </button>
+              <button
+                className="text-black w-[30px] h-[30px]  rounded mt-0"
+                onClick={detailsCloseButtonClick}
+              >
+                X
+              </button>
             </div>
 
             <form onSubmit={onSubmit} className="mt-2 w-[800px] ">
-              <div className=' flex'>
-              <h2 className="text-black text-2xl pb-5">{details.titre}</h2>
-              </div>
-              
-              <div className="group flex">
-                <div className=' w-[40%]'>
-                  Date :
-                </div>
-                <div>
-                  {details.date}
-                </div>
+              <div className=" flex">
+                <h2 className="text-black text-2xl pb-5">{details.titre}</h2>
               </div>
 
               <div className="group flex">
-                <div className=' w-[40%]'>
-                  Description:
-                </div>
-                <div>
-                  {details.contenu}
-                </div>
+                <div className=" w-[40%]">Date :</div>
+                <div>{details.date}</div>
               </div>
 
-              {details.solution !== "aucune" &&
-                (
-                
-                  <div className="group flex">
-                    <div className=' w-[40%]'>
-                      Solution:
-                    </div>
+              <div className="group flex">
+                <div className=" w-[40%]">Description:</div>
+                <div>{details.contenu}</div>
+              </div>
 
-                    <div> {details.solution}</div>     
-                  </div>
-                )
-              }
+              <div className="group flex">
+                <div className="w-[40%]">Status</div>
+                <div>{statuService.getStatu(details.statuId)}</div>
+              </div>
 
+              {details.solution !== "aucune" && (
+                <div className="group flex">
+                  <div className=" w-[40%]">Solution:</div>
+                  <div> {details.solution}</div>
+                </div>
+              )}
             </form>
-            
           </div>
         </div>
       )}
 
-
-
       <ReactPaginate
-        previousLabel={'Previous'}
-        nextLabel={'Next'}
-        breakLabel={'...'}
+        previousLabel={"Previous"}
+        nextLabel={"Next"}
+        breakLabel={"..."}
         pageCount={pageCount}
         marginPagesDisplayed={5}
         pageRangeDisplayed={5}
         onPageChange={handlePageClick}
-        containerClassName={'pagination flex justify-center'}
-        activeClassName={'active'}
-        previousClassName={'pagination-item'}
-        nextClassName={'pagination-item'}
-        pageClassName={'pagination-item'}
-        breakClassName={'pagination-item'}
-        pageLinkClassName={'pagination-link'}
+        containerClassName={"pagination flex justify-center"}
+        activeClassName={"active"}
+        previousClassName={"pagination-item"}
+        nextClassName={"pagination-item"}
+        pageClassName={"pagination-item"}
+        breakClassName={"pagination-item"}
+        pageLinkClassName={"pagination-link"}
         previousLinkClassName={
-          'rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400'
+          "rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400"
         }
         nextLinkClassName={
-          'rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400'
+          "rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400"
         }
         breakLinkClassName={
-          'rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400'
+          "rounded-full bg-transparent px-3 py-1.5 text-sm text-neutral-500 transition-all duration-300 dark:text-neutral-400"
         }
-        activeLinkClassName={'bg-primary-100 text-primary-700 font-medium'}
-        disabledClassName={'disabled'}
+        activeLinkClassName={"bg-primary-100 text-primary-700 font-medium"}
+        disabledClassName={"disabled"}
       />
-
-      
     </div>
   );
 };
