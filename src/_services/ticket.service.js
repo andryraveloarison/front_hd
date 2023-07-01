@@ -4,7 +4,11 @@ import Axios from "./caller.service";
 
 let addTicket = (ticket) => {
 
-    return Axios.put('/ticket/add',ticket)
+    return Axios.put('/ticket/add',ticket, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
 }
 
 

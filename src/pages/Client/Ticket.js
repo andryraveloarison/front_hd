@@ -12,6 +12,7 @@ const Ticket = () => {
   const [searchTitle, setSearchTitle] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
+  const [image, setImage] = useState();
 
   const user = useSelector(selectUser);
 
@@ -24,6 +25,7 @@ const Ticket = () => {
     titre: '',
     contenu: '',
     userId: user.id,
+    image:null
   });
 
   const [details, setDetails] = useState({
@@ -42,20 +44,22 @@ const Ticket = () => {
   }, []);
 
   const onChange = (e) => {
-    setNewTickets({
-      ...newTickets,
-      [e.target.name]: e.target.value,
-    });
+    if(e.target.name==="image"){
+      setImage(e.target.files[0])
+    }
+    else{
+
+      setNewTickets({
+        ...newTickets,
+        [e.target.name]: e.target.value,
+      });
+    }
+    
+  
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    setNewTickets({
-      titre: '',
-      contenu: '',
-      userId: user.id,
-    });
 
     const notification = user.nom + ' a créé un nouveau ticket';
     if (socket) {
@@ -71,10 +75,13 @@ const Ticket = () => {
       contenu: notification,
     });
 
-    console.log(newTickets);
+   
 
     ticketService
-      .addTicket(newTickets)
+      .addTicket({
+        ...newTickets,
+        image:image
+      })
       .then((res) => {
         window.location.reload();
       })
@@ -134,7 +141,7 @@ const Ticket = () => {
               </button>
             </div>
 
-            <form onSubmit={onSubmit} className="mt-2 w-[500px]">
+            <form onSubmit={onSubmit} className="mt-2 w-[500px]" Content-Type= "multipart/form-data">
               <h2 className="text-black text-2xl pb-3">Créer un ticket</h2>
               <div className="group">
                 <label htmlFor="titre" className="text-black">
@@ -159,6 +166,7 @@ const Ticket = () => {
                   className="w-full h-40 border-2 rounded py-1 px-2 text-black"
                 />
               </div>
+              <input type="file" name="image"  onChange={onChange} />
               <div className="group">
                 <button className="bg-gray-800 text-white w-full h-[40px] rounded my-2 mt-4">
                   Créer
