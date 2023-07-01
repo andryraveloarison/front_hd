@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Chat = () => {
     const [showForm, setShowForm] = useState(false);
+    const [showImage, setShowImage] = useState(false);
     const user = useSelector(selectUser)
     const[messages,setMessages] = useState({
         messages:[],
@@ -43,7 +44,7 @@ const Chat = () => {
     const [load, setLoad] = useState(false)
     const [conversations,setConversations] = useState([])
 
-
+    const [image, setImage]=useState('')
     //Socket
     const [socket, setSocket] = useState(null)
 
@@ -119,9 +120,8 @@ const Chat = () => {
 
 
 
-    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId) => {
+    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId,nomImage) => {
 
-        
         messageService.getMessage(conversationId)
         .then(res => {
             setMessages({messages:res.data,
@@ -131,6 +131,7 @@ const Chat = () => {
                                  receiverNom:receiverNom,
                                  statuId:statuId,
                                  statu_user_ticket:statu_user_ticket,
+                                 nomImage: nomImage
                                  },
                         conversationId:conversationId,
                         receiverId: receiverId
@@ -141,8 +142,8 @@ const Chat = () => {
 
     if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
         const lastConversation = conversations.slice(0, 1)[0]; // Obtenir le dernier élément de conversations
-        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,statu_user_ticket,ticketId } = lastConversation;
-        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket,ticketId);
+        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,statu_user_ticket,ticketId,nomImage } = lastConversation;
+        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket,ticketId, nomImage);
     }
 
 
@@ -310,6 +311,14 @@ const Chat = () => {
         setShowForm(false);
       };
     
+    const afficherImage = (image) => {
+        setImage(image)
+        setShowImage(true);
+    }
+
+    const FermerImage = () => {
+        setShowImage(false);
+    }
     
     
     return (
@@ -333,15 +342,15 @@ const Chat = () => {
                                 <></>
                               ) : (
                                 
-                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket,ticketId})=>{
+                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket,ticketId,nomImage})=>{
                                 return( 
                                     <div className='flex items-center py-8 border-b border-b-gray-300'>
-                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId)}>
+                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId, nomImage)}>
                                             <div>
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
-                                                    <h3 className='text-lg font-semibold'> {receiverNom} </h3>
+                                                    <h3 className='text-lg font-semibold'> {receiverNom}</h3>
                                                     <p className="text-lg font-light text-gray-600"> {statuService.getStatu(statuId)}</p>
                                             </div>
                                         </div>
@@ -461,13 +470,44 @@ const Chat = () => {
                     <div className='flex items-center justify-center py-8 border-b border-b-gray-300'>
                         <p className="text-lg font-light text-gray-600 text-center">{messages.contenu.ticketContenu}</p>
                     </div>  
+                   
+
+                    {
+                         
+                         (messages.contenu.nomImage !== "aucune" ) && 
+                        (
+                        <div className='flex justify-end p-4'>
+                             <button
+                                className="bg-gray-800 text-white w-[100px] h-[30px] rounded "
+                                onClick={() => afficherImage(messages.contenu.nomImage)}                    >
+                                    Image
+                            </button>
+                        </div>
+                        )
+                    }
                 </>
                
             )}
             
             </div>        
 
-
+            {showImage && (
+        
+                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className=" w-[900px] rounded">
+                        <div className="flex justify-end">
+                            <button
+                            className="text-black w-[30px] h-[30px]  rounded mt-0"
+                            onClick={FermerImage}
+                            >
+                            X
+                            </button>
+                        </div>
+                            <img src={require(`../../../assets/${image}`)} alt="Avatar" style={{ width: 1140, height: 530 }} />
+                    </div>
+                </div>
+            )
+            }
         
         {showForm && (
         
