@@ -5,7 +5,10 @@ import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import ReactPaginate from 'react-paginate';
+//const imagePath = require(`../../../assets/${imageName}`).default;
 
+
+const image = require(`../../../assets/avatar.png`).default;
 
 
 const TicketCurrent = () => {
@@ -17,6 +20,7 @@ const TicketCurrent = () => {
   const [details, setdetails] = useState({
   });
 
+  const [imageTicket, setIMageTicket] = useState()
 
   const [load, setLoad] = useState("true")
   const [ListTickets,setListeTickets] = useState([])
@@ -211,17 +215,21 @@ const pageCount = Math.ceil(tickets.length / pageSize);
     const detailsButtonClick = (ticket) => {
 
     setdetails(ticket )
- 
+    setIMageTicket(require(`../../../assets/avatar.png`).default)
      setShowDetails(true);
    };
    
    const detailsCloseButtonClick = () => {
      setShowDetails(false);
    };
+   
+
+
 
 
 return (
   <div className="User p-4 h-full ml-[250px] mt-[90px] mr-[30px]"style={{ position:'relative' }}>
+
   <h1 className="text-2xl font-bold mb-4">Liste des tickets actifs</h1>
   <table className="w-full">
     <thead >
@@ -304,7 +312,7 @@ return (
                   <button
                       className="bg-gray-800 text-white w-[100px] h-[30px] rounded "
                       onClick={() => detailsButtonClick(ticket)}                    >
-                        Details
+                        Details 
                   </button>
                 </td>
           </tr>
@@ -375,6 +383,15 @@ return (
                   {statuService.getStatu(details.statuId)}
                 </div>
               </div>
+
+              {
+                details.nomImage !== "aucune" && 
+                (
+                  <div>
+                    <img src={require(`../../../assets/${details.nomImage}`)} alt="Avatar" style={{ width: 1140, height: 530 }} />
+                  </div>
+                )
+              }
 
             </form>
             

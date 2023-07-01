@@ -12,7 +12,7 @@ const Ticket = () => {
   const [searchTitle, setSearchTitle] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
-  const [image, setImage] = useState();
+  const [image, setImage] = useState('');
 
   const user = useSelector(selectUser);
 
@@ -25,7 +25,8 @@ const Ticket = () => {
     titre: '',
     contenu: '',
     userId: user.id,
-    image:null
+    image:null,
+    nomImage:""
   });
 
   const [details, setDetails] = useState({
@@ -46,6 +47,7 @@ const Ticket = () => {
   const onChange = (e) => {
     if(e.target.name==="image"){
       setImage(e.target.files[0])
+
     }
     else{
 
@@ -75,11 +77,13 @@ const Ticket = () => {
       contenu: notification,
     });
 
-   
+    //console.log(image.name)
+
 
     ticketService
       .addTicket({
         ...newTickets,
+        nomImage: image.name,
         image:image
       })
       .then((res) => {
