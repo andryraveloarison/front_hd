@@ -146,10 +146,10 @@ const Ticket = () => {
                 <div>{statuService.getStatu(details.statuId)}</div>
               </div>
 
-              {details.solution !== 'aucune' && (
+              {details.observationType !== 'aucune' && (
                 <div className="group flex">
-                  <div className="w-[40%]">Solution:</div>
-                  <div>{details.solution}</div>
+                  <div className="w-[40%]">{details.observationType}</div>
+                  <div>{details.observation}</div>
                 </div>
               )}
             </form>

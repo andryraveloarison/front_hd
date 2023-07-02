@@ -384,6 +384,14 @@ return (
                 </div>
               </div>
 
+              {details.observationType !== 'aucune' && (
+                <div className="group flex">
+                  <div className="w-[40%]">{details.observationType}</div>
+                  <div>{details.observation}</div>
+                </div>
+              )}
+              
+
               {
                 details.nomImage !== "aucune" && 
                 (

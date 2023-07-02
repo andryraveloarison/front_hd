@@ -108,14 +108,8 @@ const Ticket = () => {
     setShowForm(false);
   };
 
-  const detailsButtonClick = (titre, contenu, date, solution,statuId) => {
-    setDetails({
-      titre: titre,
-      contenu: contenu,
-      date: date,
-      solution: solution,
-      statuId: statuId
-    });
+  const detailsButtonClick = (ticket) => {
+    setDetails(ticket);
 
     setShowDetails(true);
   };
@@ -243,21 +237,11 @@ const Ticket = () => {
                   <td className="px-4 py-2 text-center">
                     <button
                       className="bg-gray-800 text-white w-[100px] h-[30px] rounded"
-                      onClick={() =>
-                        detailsButtonClick(
-                          ticket.titre,
-                          ticket.contenu,
-                          ticket.createdAt,
-                          ticket.solution,
-                          ticket.statuId
-                        )
-                      }
+                      onClick={() => detailsButtonClick(ticket)}
                     >
-                      {ticket.solution === "aucune" ? (
+                      
                         <p>Details</p>
-                      ) : (
-                        <p>Solution</p>
-                      )}
+                    
                     </button>
                   </td>
                 </tr>
@@ -285,7 +269,7 @@ const Ticket = () => {
 
               <div className="group flex">
                 <div className=" w-[40%]">Date :</div>
-                <div>{details.date}</div>
+                <div>{details.createdAt}</div>
               </div>
 
               <div className="group flex">
@@ -297,11 +281,10 @@ const Ticket = () => {
                 <div className="w-[40%]">Status</div>
                 <div>{statuService.getStatu(details.statuId)}</div>
               </div>
-
-              {details.solution !== "aucune" && (
+              {(details.observationType !== 'aucune' && details.observationType !== 'probleme') && (
                 <div className="group flex">
-                  <div className=" w-[40%]">Solution:</div>
-                  <div> {details.solution}</div>
+                  <div className="w-[40%]">{details.observationType}</div>
+                  <div>{details.observation}</div>
                 </div>
               )}
             </form>

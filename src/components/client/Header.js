@@ -102,14 +102,14 @@ const Header = () => {
             
             </div>
 
-            <div className=" flex items-end justify-start text-white py-4 px-16">
+            <div className=" flex items-end justify-start text-black py-4 px-16">
                 <button onClick={toggleNotificationList}> 
 
                     <div className="relative m-6 inline-flex w-fit">
                             {
                                 nbNotif !==0 && (
                                 <div
-                                className="absolute w-4 bottom-auto left-8 right-0 top-0 z-10 inline-block -translate-y-1/2 translate-x-1 rotate-0 skew-x-0 skew-y-0 scale-x-88 scale-y-100 whitespace-nowrap rounded-full bg-red-700 py-1 text-center align-baseline text-xs font-bold leading-none text-white">
+                                className="absolute w-4 bottom-auto left-8 right-0 top-0 z-10 inline-block -translate-y-1/2 translate-x-1 rotate-0 skew-x-0 skew-y-0 scale-x-88 scale-y-100 blackspace-nowrap rounded-full bg-red-700 py-1 text-center align-baseline text-xs font-bold leading-none text-white">
                                 {nbNotif !==0 && (nbNotif)}
                                 </div>
                                 )
@@ -125,7 +125,7 @@ const Header = () => {
                     
                 </button>
                     {showNotifications && (
-                    <div className="notificationList fixed top-10 bg-blue-500 py-4 my-4 w-40 ">
+                    <div className="notificationList fixed top-10 bg-secondary py-4  mt-7  w-70 ">
                         <ul className="m-0 p-0 border-b dark:border-neutral-500">
                             {notification.length === 0 ? (
                                 <li> Aucune notification</li>

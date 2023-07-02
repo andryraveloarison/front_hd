@@ -1,6 +1,6 @@
 import Avatar from '@/assets/avatar.png'
 import Input from '@/components/Input';
-import { messageService, conversationService, statuService, notificationService } from '@/_services';
+import { messageService, conversationService, statuService, notificationService, observationService } from '@/_services';
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
@@ -10,25 +10,45 @@ import { toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 const Chat = () => {
-
+    const [showForm, setShowForm] = useState(false);
+    const [showImage, setShowImage] = useState(false);
+    const [observation, setObservation] = useState({
+        type:""
+    })
     const user = useSelector(selectUser)
     const[messages,setMessages] = useState({
         messages:[],
         contenu:{}
         })
 
+
+
     const messagesRef = useRef(messages);
 
+    const [newObservation, setNewObservation] = useState({
+    contenu: "",
+    ticketId: 1 ,
+    
+  });
+
+    const onChange = (e) => {
+    setNewObservation({
+      ...newObservation,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
     useEffect(() => {
-              messagesRef.current = messages;
-            }, [messages]);
+          messagesRef.current = messages;
+        }, [messages]);
 
     const [message,setMessage] = useState()
 
     const [load, setLoad] = useState(false)
     const [conversations,setConversations] = useState([])
 
-
+    const [image, setImage]=useState('')
     //Socket
     const [socket, setSocket] = useState(null)
 
@@ -37,6 +57,7 @@ const Chat = () => {
 	}, [])
 
 
+   
     useEffect(() => {
         if(socket)
         {
@@ -47,7 +68,6 @@ const Chat = () => {
             }
             socket.emit('addUser', {data});
             socket.on('getUsers', users => {
-                console.log('activeUsers :>> ', users);
             })
             socket.on('getMessage', data => {
 
@@ -65,16 +85,23 @@ const Chat = () => {
                     
                 }
             })
-            socket.on('getNotification', notification => {
+            socket.on('getNotification', notification => {        
+                toast(notification, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    });
+
                 alert(notification.contenu)
-                const updateConversation=conversationService.getConversation(user.id).then((res) => 
-                setConversations(res.data.conversation))
-                
-            })
+        })
         }
 		
 	}, [socket])
-
 	
 
     const { isLoading, isError, data: dataConversations, error } = useQuery(
@@ -97,17 +124,18 @@ const Chat = () => {
 
 
 
-    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket) => {
+    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId,nomImage) => {
 
-        
         messageService.getMessage(conversationId)
         .then(res => {
             setMessages({messages:res.data,
-                        contenu:{ticketTitre:ticketTitre,
+                        contenu:{ticketId:ticketId,
+                                 ticketTitre:ticketTitre,
                                  ticketContenu:ticketContenu,
                                  receiverNom:receiverNom,
                                  statuId:statuId,
                                  statu_user_ticket:statu_user_ticket,
+                                 nomImage: nomImage
                                  },
                         conversationId:conversationId,
                         receiverId: receiverId
@@ -116,11 +144,10 @@ const Chat = () => {
         .catch(err => console.log(err))
     }
 
-
     if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
         const lastConversation = conversations.slice(0, 1)[0]; // Obtenir le dernier élément de conversations
-        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,statu_user_ticket } = lastConversation;
-        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket);
+        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,statu_user_ticket,ticketId,nomImage } = lastConversation;
+        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket,ticketId, nomImage);
     }
 
 
@@ -148,13 +175,25 @@ const Chat = () => {
     }
 
 
-    const cloturer = (id, ticketTitre, receiverId) => {
+    const cloturer = (id, ticketTitre, receiverId, ticketId) => {
 
         const notification ="Votre ticket sur "+ ticketTitre+ " est resolu"
         const dataNotif = {
             receiverId: receiverId,
             contenu:notification
           }
+
+          setObservation({
+            type:"solution",
+            action:"resolu"
+        })
+
+        setNewObservation({
+            ...newObservation,
+            ticketId: ticketId,
+            observationType: "solution"
+        })
+
           if (socket) {
             socket.emit('sendNotification', dataNotif);
             }
@@ -165,27 +204,43 @@ const Chat = () => {
                 contenu: notification
             })
                
+        
 
         statuService.cloturer(id)
+        
         .then(res => {
-            alert('Le ticket est resolu')
-            window.location.reload();
+            setShowForm(true);
     
         })
         .catch(err => console.log(err))
     }
 
-    const nonCloturer = (id, ticketTitre, receiverId) => {
 
+    const nonCloturer = (id, ticketTitre, receiverId, ticketId ) => {
+        
         const notification ="Votre ticket sur "+ ticketTitre+ " n'est pas resolu"
         const dataNotif = {
             receiverId: receiverId,
             contenu:notification
           }
+
+          setObservation({
+            type:"probleme",
+            action:"non resolu"
+        })
+
+          setNewObservation({
+            ...newObservation,
+            ticketId: ticketId,
+            observationType: "probleme"
+        })
+
+
           if (socket) {
             socket.emit('sendNotification', dataNotif);
             }
 
+        console.log(receiverId)
             //Ajouter le notification dans la base
             notificationService.addNotification({
                 userId: receiverId,
@@ -193,15 +248,16 @@ const Chat = () => {
             })
                
 
+       
+
         statuService.nonCloturer(id)
+        
         .then(res => {
-            alert('Le ticket est n\'est pas resolu')
-            window.location.reload();
+            setShowForm(true);
     
         })
         .catch(err => console.log(err))
     }
-
 
 
 
@@ -221,6 +277,7 @@ const Chat = () => {
           
           let notification=""
           let statuChanged=0
+
           if(updatedState.contenu.statuId === 7){
             notification ="Votre ticket sur "+ ticketTitre+ " est en attente"
             statuChanged=7
@@ -252,6 +309,7 @@ const Chat = () => {
             receiverId: receiverId,
             contenu:notification,
             conversationId: conversationId
+            
           }
           if (socket) {
             socket.emit('sendNotification', dataNotif);
@@ -264,8 +322,31 @@ const Chat = () => {
             })
                
 
+            
     }
 
+    const onSubmit = (e) => {
+        e.preventDefault();
+        observationService.addObservation(newObservation).then((res) => {
+            
+            window.location.reload();
+        })
+        .catch((err) => console.log(err));
+    }
+
+
+    const handleCloseButtonClick = () => {
+        setShowForm(false);
+      };
+    
+    const afficherImage = (image) => {
+        setImage(image)
+        setShowImage(true);
+    }
+
+    const FermerImage = () => {
+        setShowImage(false);
+    }
     
     
     return (
@@ -289,10 +370,10 @@ const Chat = () => {
                                 <></>
                               ) : (
                                 
-                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket})=>{
+                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId,statu_user_ticket,ticketId,nomImage})=>{
                                 return( 
                                     <div className='flex items-center py-8 border-b border-b-gray-300'>
-                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket)}>
+                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId,statu_user_ticket,ticketId, nomImage)}>
                                             <div>
                                                 <img src={Avatar} width={60} height={60}/>
                                             </div>
@@ -338,19 +419,18 @@ const Chat = () => {
                         </button>
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold h-10 w-16 rounded" onClick={() => cloturer(messages.contenu.statu_user_ticket, 
                                                                                                                                            messages.contenu.ticketTitre,
-                                                                                                                                           messages.receiverId)}>Resolu</button>
+                                                                                                                                           messages.receiverId,
+                                                                                                                                           messages.contenu.ticketId)}>Resolu</button>
                         <button className="bg-red-500 hover:bg-red-700 text-white font-bold h-10 w-16 rounded" onClick={() => nonCloturer(messages.contenu.statu_user_ticket, 
-                                                                                                                                           messages.contenu.ticketTitre,
-                                                                                                                                           messages.receiverId)}>NonResolu</button>                     
-                      </div>
+                                                                                                                                            messages.contenu.ticketTitre,
+                                                                                                                                            messages.receiverId,
+                                                                                                                                            messages.contenu.ticketId,
+                                                                                                                                            )}>NonResolu</button>                     
+                        </div>
                     </div>
                   </div>
-                  
-                
-
-                              
+                )}  
                
-            )}
 
                 <div className='h-[75%] w-full overflow-scroll shadow-sm'>
                     <div className="p-14">
@@ -420,11 +500,85 @@ const Chat = () => {
                     <div className='flex items-center justify-center py-8 border-b border-b-gray-300'>
                         <p className="text-lg font-light text-gray-600 text-center">{messages.contenu.ticketContenu}</p>
                     </div>  
+                   
+
+                    {
+                         
+                         (messages.contenu.nomImage !== "aucune" ) && 
+                        (
+                        <div className='flex justify-end p-4'>
+                             <button
+                                className="bg-gray-800 text-white w-[100px] h-[30px] rounded "
+                                onClick={() => afficherImage(messages.contenu.nomImage)}                    >
+                                    Image
+                            </button>
+                        </div>
+                        )
+                    }
                 </>
                
             )}
             
-            </div>                                                                                                                                                                                                                                                                                                       
+            </div>        
+
+            {showImage && (
+        
+                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className=" w-[900px] rounded">
+                        <div className="flex justify-end">
+                            <button
+                            className="text-black w-[30px] h-[30px]  rounded mt-0"
+                            onClick={FermerImage}
+                            >
+                            X
+                            </button>
+                        </div>
+                            <img src={require(`../../../assets/${image}`)} alt="Avatar" style={{ width: 1140, height: 530 }} />
+                    </div>
+                </div>
+            )
+            }
+        
+        {showForm && (
+        
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            
+            <div className=" bg-white w-[720px] rounded">
+                <div className="flex justify-end">
+
+                    <button
+                    className="text-black w-[30px] h-[30px]  rounded mt-0"
+                    onClick={handleCloseButtonClick}
+                    >
+                    X
+                    </button>
+                </div>
+
+                <form onSubmit={onSubmit} className="mt-2 w-[500px]">
+                <h2 className="text-black text-2xl pb-3">Ajouter une observation</h2>
+
+                <div className="group">
+                    <label htmlFor="contenu" className="text-black">
+                    {observation.type}
+                    </label>
+                    <textarea
+                    name="contenu"
+                    value={newObservation.contenu}
+                    onChange={onChange}
+                    className="w-full h-40 border-2 rounded py-1 px-2 text-black"
+                    />
+
+                </div>
+                <div className="group">
+                    <button className="bg-gray-800 text-white w-full h-[40px] rounded my-2 mt-4">
+                    {observation.action}
+                    </button>
+                </div>
+                </form>
+                
+            </div>
+        </div>
+        )}                                                                                                                                                                                                                                                                                       
             
         </div>                                                                                                                                                                             
     );

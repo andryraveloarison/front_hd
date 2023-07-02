@@ -89,7 +89,7 @@ const Header = () => {
             
             </div>
 
-            <div className="AHeader flex items-end  text-white py-4 px-6 " style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100999 }}>
+            <div className="AHeader flex items-end  text-black py-4 px-6 " style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100999 }}>
                     <button onClick={toggleNotificationList}> 
 
                         <div className="relative m-6 inline-flex w-fit">
@@ -112,7 +112,7 @@ const Header = () => {
 
                     </button>
                     {showNotifications && (
-                    <div className="notificationList fixed top-10 bg-blue-500 py-4 my-4 w-40 ">
+                    <div className="notificationList fixed top-10  bg-secondary py-4 my-4 w-70 ">
                        <ul className="m-0 p-0 border-b dark:border-neutral-500">
                         {notification.length === 0 ? (
                             <li> Aucune notification</li>

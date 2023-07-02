@@ -1,6 +1,6 @@
 import Avatar from '@/assets/avatar.png'
 import Input from '@/components/Input';
-import { messageService, conversationService, statuService, notificationService, solutionService } from '@/_services';
+import { messageService, conversationService, statuService, notificationService, observationService } from '@/_services';
 import { useQuery } from 'react-query';
 import { selectUser } from '@/features/userSlice';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const Chat = () => {
     const [showForm, setShowForm] = useState(false);
     const [showImage, setShowImage] = useState(false);
+    const [observation, setObservation] = useState({
+        type:""
+    })
     const user = useSelector(selectUser)
     const[messages,setMessages] = useState({
         messages:[],
@@ -22,14 +25,15 @@ const Chat = () => {
 
     const messagesRef = useRef(messages);
 
-    const [newSolution, setNewSolution] = useState({
+    const [newObservation, setNewObservation] = useState({
     contenu: "",
-    ticketId: 1 
+    ticketId: 1 ,
+    
   });
 
     const onChange = (e) => {
-    setNewSolution({
-      ...newSolution,
+    setNewObservation({
+      ...newObservation,
       [e.target.name]: e.target.value,
     });
   };
@@ -179,9 +183,15 @@ const Chat = () => {
             contenu:notification
           }
 
-        setNewSolution({
-            ...newSolution,
+          setObservation({
+            type:"solution",
+            action:"resolu"
+        })
+
+        setNewObservation({
+            ...newObservation,
             ticketId: ticketId,
+            observationType: "solution"
         })
 
           if (socket) {
@@ -194,8 +204,10 @@ const Chat = () => {
                 contenu: notification
             })
                
+        
 
         statuService.cloturer(id)
+        
         .then(res => {
             setShowForm(true);
     
@@ -204,17 +216,31 @@ const Chat = () => {
     }
 
 
-    const nonCloturer = (id, ticketTitre, receiverId) => {
-
+    const nonCloturer = (id, ticketTitre, receiverId, ticketId ) => {
+        
         const notification ="Votre ticket sur "+ ticketTitre+ " n'est pas resolu"
         const dataNotif = {
             receiverId: receiverId,
             contenu:notification
           }
+
+          setObservation({
+            type:"probleme",
+            action:"non resolu"
+        })
+
+          setNewObservation({
+            ...newObservation,
+            ticketId: ticketId,
+            observationType: "probleme"
+        })
+
+
           if (socket) {
             socket.emit('sendNotification', dataNotif);
             }
 
+        console.log(receiverId)
             //Ajouter le notification dans la base
             notificationService.addNotification({
                 userId: receiverId,
@@ -222,10 +248,12 @@ const Chat = () => {
             })
                
 
+       
+
         statuService.nonCloturer(id)
+        
         .then(res => {
-            alert('Le ticket est n\'est pas resolu')
-            window.location.reload();
+            setShowForm(true);
     
         })
         .catch(err => console.log(err))
@@ -299,7 +327,7 @@ const Chat = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        solutionService.addSolution(newSolution).then((res) => {
+        observationService.addObservation(newObservation).then((res) => {
             
             window.location.reload();
         })
@@ -394,13 +422,15 @@ const Chat = () => {
                                                                                                                                            messages.receiverId,
                                                                                                                                            messages.contenu.ticketId)}>Resolu</button>
                         <button className="bg-red-500 hover:bg-red-700 text-white font-bold h-10 w-16 rounded" onClick={() => nonCloturer(messages.contenu.statu_user_ticket, 
-                                                                                                                                            messages.contenu.ticketTitre,                                                                                                                                       messages.receiverId)}>NonResolu</button>                     
+                                                                                                                                            messages.contenu.ticketTitre,
+                                                                                                                                            messages.receiverId,
+                                                                                                                                            messages.contenu.ticketId,
+                                                                                                                                            )}>NonResolu</button>                     
                         </div>
                     </div>
                   </div>
-                    
+                )}  
                
-            )}
 
                 <div className='h-[75%] w-full overflow-scroll shadow-sm'>
                     <div className="p-14">
@@ -513,7 +543,7 @@ const Chat = () => {
         
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             
-            <div className=" bg-white w-[900px] rounded">
+            <div className=" bg-white w-[720px] rounded">
                 <div className="flex justify-end">
 
                     <button
@@ -525,15 +555,15 @@ const Chat = () => {
                 </div>
 
                 <form onSubmit={onSubmit} className="mt-2 w-[500px]">
-                <h2 className="text-black text-2xl pb-3">Ajouter une solution</h2>
+                <h2 className="text-black text-2xl pb-3">Ajouter une observation</h2>
 
                 <div className="group">
                     <label htmlFor="contenu" className="text-black">
-                    Solution
+                    {observation.type}
                     </label>
                     <textarea
                     name="contenu"
-                    value={newSolution.contenu}
+                    value={newObservation.contenu}
                     onChange={onChange}
                     className="w-full h-40 border-2 rounded py-1 px-2 text-black"
                     />
@@ -541,7 +571,7 @@ const Chat = () => {
                 </div>
                 <div className="group">
                     <button className="bg-gray-800 text-white w-full h-[40px] rounded my-2 mt-4">
-                    Resolu
+                    {observation.action}
                     </button>
                 </div>
                 </form>
