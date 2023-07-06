@@ -115,7 +115,7 @@ const Chat = () => {
     }
       if (isError) return <div>{error.message}</div>;
 
-    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId) => {
+    const fetchMessage = (conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId, imageProfile) => {
         
         messageService.getMessage(conversationId)
         .then(res => {
@@ -126,7 +126,8 @@ const Chat = () => {
                                  statuId:statuId,
                                  },
                         conversationId:conversationId,
-                        receiverId: receiverId
+                        receiverId: receiverId,
+                        imageProfile: imageProfile
                     })
         })
         .catch(err => console.log(err))
@@ -134,8 +135,8 @@ const Chat = () => {
     
     if(conversations.length !== 0 && Object.keys(messages.contenu).length === 0){
         const lastConversation = conversations.slice(0, 1)[0]; // Obtenir le dernier élément de conversations
-        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket } = lastConversation;
-        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId, statu_user_ticket);
+        const { conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,  imageProfile } = lastConversation;
+        fetchMessage(conversationId, ticketTitre, ticketContenu, receiverNom, statuId, receiverId,  imageProfile);
     }
 
 
@@ -184,12 +185,12 @@ const Chat = () => {
                             conversations.length === 0 ? (
                                 <></>
                               ) : (
-                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId})=>{
+                            conversations.map (({statuId,receiverNom,conversationId,ticketTitre,ticketContenu,receiverId, imageProfile})=>{
                                 return( 
                                     <div className='flex items-center py-8 border-b border-b-gray-300'>
-                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId)}>
+                                        <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId, imageProfile)}>
                                             <div>
-                                            <img src={Avatar} alt="" width={60} height={60}/>
+                                            <img src={require(`../../assets/${imageProfile}`)} width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
                                                     <h3 className='text-lg font-semibold'> {receiverNom}  </h3>
@@ -212,7 +213,13 @@ const Chat = () => {
                                             
                 <div className="w-[75%] bg-secondary h-[80px] mt-14 rounded-full flex items-center px-14 ">
                     <div>
-                        <img src={Avatar} width={60} height={60}/>
+                        {
+                            messages.imageProfile && (
+                                
+
+                             <img src={require(`../../assets/${messages.imageProfile}`)} width={60} height={60}/>
+                            )
+                        }
                     </div>
                     <div className="ml-6">
                         <h3 className='text-lg '> {messages.contenu.receiverNom} </h3>

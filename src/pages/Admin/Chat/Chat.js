@@ -355,7 +355,7 @@ const Chat = () => {
             <div className='w-[25%]  h-screen bg-secondary'>
                 <div className='flex items-center my-8 mx-14'>
                 <div>
-                    <img src={Avatar} width={75} height={75}/>
+                <img src={require(`../../../assets/${user.image}`)} alt="" width={75} height={75}/>
                 </div>
                     <div className='ml-8'>
                         <h3 className='text-0.5xl'> {user.nom} </h3>
