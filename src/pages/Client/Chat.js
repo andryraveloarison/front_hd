@@ -169,7 +169,7 @@ const Chat = () => {
             <div className='w-[25%]  h-screen bg-secondary'>
                 <div className='flex items-center my-8 mx-14'>
                 <div>
-                    <img src={Avatar} width={75} height={75}/>
+                <img src={require(`../../assets/${user.image}`)} alt="" width={75} height={75}/>
                 </div>
                     <div className='ml-8'>
                         <h3 className='text-0.5xl'> {user.nom} </h3>
@@ -189,7 +189,7 @@ const Chat = () => {
                                     <div className='flex items-center py-8 border-b border-b-gray-300'>
                                         <div className='cursor-pointer flex items-center' onClick={()=> fetchMessage(conversationId,ticketTitre,ticketContenu,receiverNom,statuId,receiverId)}>
                                             <div>
-                                                <img src={Avatar} width={60} height={60}/>
+                                            <img src={Avatar} alt="" width={60} height={60}/>
                                             </div>
                                             <div className='ml-6'>
                                                     <h3 className='text-lg font-semibold'> {receiverNom}  </h3>

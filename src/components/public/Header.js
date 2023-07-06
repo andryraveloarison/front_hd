@@ -6,8 +6,8 @@ import './header.css'
 
 const Header = () => {
     return (
-        <div className='CHeader flex items-end'>
-            <div className=" flex text-white py-4">
+        <div className='CHeader flex justify-center'>
+            <div className=" flex text-black py-4 items-end justify-end">
                 <ul className='list-none flex'>
                     <li className='px-10'><Link to="home">Accueil</Link></li>
                     <li className='px-10'><Link to ="/login">&nbsp;Se connecter</Link></li>

@@ -12,10 +12,6 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const [erreur,setErreur] = useState('')
-    // const [login, setLogin] = useState('')
-    // const [password, setPassword] = useState('')
-
-
 
     const [credentials, setCredentials]=useState({
         email: 'admin@gmail.com',
@@ -41,8 +37,11 @@ const Login = () => {
                 email: res.data.email,
                 role: res.data.role,
                 isLoged: true,
+                image: res.data.image
             })
+            
             );
+
             if(res.data.role === 2){
                 navigate('/user') 
             }

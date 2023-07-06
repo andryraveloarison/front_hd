@@ -8,7 +8,6 @@ import ReactPaginate from 'react-paginate';
 //const imagePath = require(`../../../assets/${imageName}`).default;
 
 
-const image = require(`../../../assets/avatar.png`).default;
 
 
 const TicketCurrent = () => {
@@ -20,10 +19,8 @@ const TicketCurrent = () => {
   const [details, setdetails] = useState({
   });
 
-  const [imageTicket, setIMageTicket] = useState()
 
   const [load, setLoad] = useState("true")
-  const [ListTickets,setListeTickets] = useState([])
   const [adminActive, setAdminActive] = useState({})
 
   const { Loading, Error, data: userAdmins = [],error } = useQuery('userAdmins', () =>
@@ -48,7 +45,6 @@ const TicketCurrent = () => {
   } else {
     if(load === "true")
     {
-      setListeTickets(tickets)
       setLoad("false")
     }
   }
@@ -129,14 +125,13 @@ const TicketCurrent = () => {
                 // Autres propriétés modifiées
               };
 
+
           }
         }
         return ticket;
       });
 
-      
-      setListeTickets(updatedTicket);     
-     
+      setCurrentPage(0);     
 
 }
 
@@ -212,10 +207,9 @@ const pageCount = Math.ceil(tickets.length / pageSize);
     setCurrentPage(data.selected);
   };
 
-    const detailsButtonClick = (ticket) => {
+  const detailsButtonClick = (ticket) => {
 
     setdetails(ticket )
-    setIMageTicket(require(`../../../assets/avatar.png`).default)
      setShowDetails(true);
    };
    
@@ -295,7 +289,7 @@ return (
               {ticket.adminNom === "none" && (
                 <button
                   onClick={() => action(ticket.statu_user_ticket, ticket.id, ticket.userId, ticket.userNom, ticket.titre , ticket.propAdminId)}
-                  className="bg-blue-500 text-white font-bold rounded mr-2 text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
+                  className="bg-blue-500 text-white font-bold rounded mt-[3px] mb-[3px] text-base w-[100px] h-[30px]" // Ajoutez les classes de dimensionnement ici
                 >
                   {statuService.getAction(ticket.statuId)}
                 </button>
@@ -314,11 +308,16 @@ return (
                       onClick={() => detailsButtonClick(ticket)}                    >
                         Details 
                   </button>
-                </td>
+            </td>
+            <hr></hr>
+
           </tr>
+          
         ))
       )}
+
     </tbody>
+    
   </table>
 
   {showDetails && (
