@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from '@/components/public/Header';
+import Header from '../../components/public/Header';
 import { Outlet,Navigate } from 'react-router-dom';
-import { accountService } from '@/_services/account.service';
+import { accountService } from '../../_services/account.service';
 
 
 const Layout = () => {

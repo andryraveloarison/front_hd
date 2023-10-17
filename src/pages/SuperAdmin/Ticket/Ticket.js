@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ticketService, statuService } from '@/_services';
+import { ticketService, statuService } from '../../../_services';
 import { useQuery } from 'react-query';
 import ReactPaginate from 'react-paginate';
 

@@ -1,8 +1,7 @@
-import Avatar from '@/assets/avatar.png'
-import Input from '@/components/Input';
-import { messageService, conversationService, statuService, notificationService, observationService } from '@/_services';
+import Input from '../../../components/Input';
+import { messageService, conversationService, statuService, notificationService, observationService } from '../../../_services';
 import { useQuery } from 'react-query';
-import { selectUser } from '@/features/userSlice';
+import { selectUser } from '../../../features/userSlice';
 import { useSelector } from 'react-redux';
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client'

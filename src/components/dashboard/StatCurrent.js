@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
-import { reportService } from '@/_services';
+import { reportService } from '../../_services';
 import { useQuery } from 'react-query';
 
 const StatCurrent = () => {

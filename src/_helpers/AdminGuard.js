@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import { accountService} from '@/_services';
-import { selectUser } from '@/features/userSlice';
+import { accountService} from '../_services';
+import { selectUser } from '../features/userSlice';
 import { useSelector } from 'react-redux';
 
 const AdminGuard = ({children}) => {

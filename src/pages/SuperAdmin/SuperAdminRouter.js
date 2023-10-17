@@ -1,12 +1,12 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom'
-import Error from '@/_utils/Error';
+import Error from '../../_utils/Error';
 
 
-import { ALayout,AHeaderLayout, Dashboard } from '@/pages/SuperAdmin'
-import { User,UserAdd,UserEdit } from '@/pages/SuperAdmin/User'
-import { Ticket,TicketCurrent } from '@/pages/SuperAdmin/Ticket'
-import { Chat } from '@/pages/SuperAdmin/Chat';
+import { ALayout,AHeaderLayout, Dashboard } from '../../pages/SuperAdmin'
+import { User,UserAdd,UserEdit } from '../../pages/SuperAdmin/User'
+import { Ticket,TicketCurrent } from '../../pages/SuperAdmin/Ticket'
+import { Chat } from '../../pages/SuperAdmin/Chat';
 
 
 

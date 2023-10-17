@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { ticketService, statuService, notificationService } from '@/_services';
-import { selectUser } from '@/features/userSlice';
+import { ticketService, statuService, notificationService } from '../../_services';
+import { selectUser } from '../../features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import ReactPaginate from 'react-paginate';

@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from '@/assets/help.avif'
+import Avatar from '../../assets/help.avif'
 
 
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { userService } from '@/_services';
+import { userService } from '../../../_services';
 import { useQuery } from 'react-query';
-import { roleService } from '@/_services';
+import { roleService } from '../../../_services';
 
 
 const User = () => {

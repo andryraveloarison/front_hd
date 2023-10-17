@@ -1,10 +1,11 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom'
-import Error from '@/_utils/Error';
+import Error from '../../_utils/Error';
 
 
-import { ALayout, Dashboard, Ticket } from '@/pages/Admin'
-import { Chat } from '@/pages/Admin/Chat';
+import { ALayout, Dashboard, Ticket } from '../../pages/Admin'
+
+import { Chat } from '../../pages/Admin/Chat';
 
 
 

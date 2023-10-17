@@ -2,8 +2,8 @@ import React from 'react';
 import {Routes, Route} from 'react-router-dom'
 
 
-import { Layout, Home, Service, Contact, Login , UserAdd} from '@/pages/Public'
-import Error from '@/_utils/Error';
+import { Layout, Home, Service, Contact, Login , UserAdd} from '../../pages/Public'
+import Error from '../../_utils/Error';
 
 
 const PublicRouter = () => {
@@ -13,7 +13,7 @@ const PublicRouter = () => {
         <Routes>
           <Route element={<Layout/>}>
 
-            <Route index element={<Login/>}/>
+            <Route index element={<Home/>}/>
 
             <Route path="/home" element={<Home/>}/>
             <Route path="/service" element={<Service/>}/>

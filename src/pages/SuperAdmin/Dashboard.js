@@ -1,10 +1,10 @@
 import React from 'react';
-import StatLast from '@/components/dashboard/StatLast';
-import StatUser from '@/components/dashboard/StatUser';
-import StatCurrent from '@/components/dashboard/StatCurrent';
+import StatLast from '../../components/dashboard/StatLast';
+import StatUser from '../../components/dashboard/StatUser';
+import StatCurrent from '../../components/dashboard/StatCurrent';
 import { selectUser } from '../../features/userSlice';
 import { useSelector } from 'react-redux';
-import { reportService } from '@/_services';
+import { reportService } from '../../_services';
 import { useQuery } from 'react-query';
   
  

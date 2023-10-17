@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Control from '@/assets/control.png'
-import Avatar from '@/assets/avatar.svg'
+import Control from '../../assets/control.png'
+import Avatar from '../../assets/avatar.svg'
 
 
 const Menu = () => {

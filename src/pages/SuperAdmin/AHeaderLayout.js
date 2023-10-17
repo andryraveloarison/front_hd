@@ -3,8 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 import './admin.css'
 
-import Header from '@/components/superAdmin/Header'
-import SideMenu from '@/components/admin/SideMenu'
+import Header from '../../components/superAdmin/Header'
 
 
 

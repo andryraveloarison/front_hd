@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { userService } from '@/_services/user.service';
+import { userService } from '../../_services/user.service';
 import { useNavigate } from 'react-router-dom';
 
 

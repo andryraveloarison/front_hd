@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { ticketService, statuService, conversationService, userService, notificationService } from '@/_services';
-import { selectUser } from '@/features/userSlice';
+import { ticketService, statuService, conversationService, userService, notificationService } from '../../../_services';
+import { selectUser } from '../../../features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import ReactPaginate from 'react-paginate';
@@ -187,6 +187,7 @@ const supprimer = (id, userId, ticketTitre) => {
 
 const selectAdmin = (newUserAdmin, newTicketId) => {
 
+  alert("fsdjkfals")
   setAdminActive(prevState => {
     if (prevState.hasOwnProperty(newTicketId)) {
       // The ticketId already exists, update userAdmin

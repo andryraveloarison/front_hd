@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { accountService } from '@/_services/account.service';
-import { notificationService} from '@/_services/notification.service'
-import { selectUser } from '@/features/userSlice';
+import { accountService } from '../../_services/account.service';
+import { notificationService} from '../../_services/notification.service'
+import { selectUser } from '../../features/userSlice';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client'
-import Notification from "@/assets/notification.png";
+import Notification from "../../assets/notification.png";
 
 
 const Header = () => {

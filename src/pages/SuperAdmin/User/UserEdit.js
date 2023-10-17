@@ -1,6 +1,6 @@
 import React, {useRef,useEffect,useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { userService } from '@/_services';
+import { userService } from '../../../_services';
 
 
 const UserEdit = () => {

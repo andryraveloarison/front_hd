@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Control from "@/assets/control.png";
-import Logo from "@/assets/logo.png";
-import Dashboard from "@/assets/Chart_fill.png";
-import Chat from "@/assets/Chat.png";
-import Ticket from "@/assets/Calendar.png";
-import { selectUser } from '@/features/userSlice';
+import Control from "../../assets/control.png";
+import Logo from "../../assets/logo.png";
+import Dashboard from "../../assets/Chart_fill.png";
+import Chat from "../../assets/Chat.png";
+import Ticket from "../../assets/Calendar.png";
+import { selectUser } from '../../features/userSlice';
 import { useSelector } from 'react-redux';
 
 

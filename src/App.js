@@ -1,10 +1,10 @@
 //import logo from '@/logo.svg';
-import '@/App.css';
+import './App.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import PublicRouter from '@/pages/Public/PublicRouter';
-import AdminRouter from '@/pages/Admin/AdminRouter';
-import AuthRouter from '@/pages/Auth/AuthRouter';
-import SuperAdminRouter from '@/pages/SuperAdmin/SuperAdminRouter';
+import PublicRouter from './pages/Public/PublicRouter';
+import AdminRouter from './pages/Admin/AdminRouter';
+import AuthRouter from './pages/Auth/AuthRouter';
+import SuperAdminRouter from './pages/SuperAdmin/SuperAdminRouter';
 import UserGuard from './_helpers/UserGuard';
 import AdminGuard from './_helpers/AdminGuard';
 import NotAuthGuard from './_helpers/NotAuthGuard';
